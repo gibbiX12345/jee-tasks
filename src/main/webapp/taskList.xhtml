@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+    <title>Task List</title>
+    <f:event type="preRenderView" listener="#{loginBean.checkLogin}" />
+</h:head>
+<h:body>
+    <h:form>
+        <h:commandButton value="Logout" action="#{loginBean.logout}"/>
+    </h:form>
+    <h1>All Tasks</h1>
+    <h:dataTable value="#{taskBean.tasks}" var="task">
+        <h:column>
+            <f:facet name="header">Task ID</f:facet>
+            <h:outputText value="#{task.taskId}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Title</f:facet>
+            <h:outputText value="#{task.title}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Description</f:facet>
+            <h:outputText value="#{task.description}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Due Date</f:facet>
+            <h:outputText value="#{task.dueDate}"/>
+        </h:column>
+    </h:dataTable>
+</h:body>
+</html>

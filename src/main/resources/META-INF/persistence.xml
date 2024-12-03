@@ -3,7 +3,14 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
              version="3.0">
-    <persistence-unit name="default">
-
+    <persistence-unit name="jee-tasks-pu" transaction-type="JTA">
+        <jta-data-source>jdbc/jee-tasks-ds</jta-data-source>
+        <class>com.ffhs.jeetasks.entity.Task</class>
+        <class>com.ffhs.jeetasks.entity.Comment</class>
+        <class>com.ffhs.jeetasks.entity.TaskList</class>
+        <class>com.ffhs.jeetasks.entity.User</class>
+        <class>com.ffhs.jeetasks.entity.Status</class>
+        <class>com.ffhs.jeetasks.entity.Priority</class>
+        <!-- Add all your entity classes here -->
     </persistence-unit>
 </persistence>
