@@ -22,7 +22,7 @@ public class TaskListBean {
     private String newTaskListTitle;
 
     public List<TaskList> getTaskLists() {
-        return taskListService.findAllTaskLists();
+        return taskListService.findAllTaskListsForUser();
     }
 
     public void addTaskList() {
