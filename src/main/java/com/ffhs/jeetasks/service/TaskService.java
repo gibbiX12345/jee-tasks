@@ -6,6 +6,7 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import lombok.Getter;
 
 import java.util.List;
 
@@ -25,6 +26,15 @@ public class TaskService {
         Long userId = loginBean.getUserId();
         return entityManager.createQuery("SELECT t FROM Task t WHERE t.taskList.user.userId = :userId", Task.class)
                 .setParameter("userId", userId)
+                .getResultList();
+    }
+
+    public List<Task> findAllTasksByListId(Long listId) {
+        if (listId == null) {
+            return findAllTasksForUser();
+        }
+        return entityManager.createQuery("SELECT t FROM Task t WHERE t.taskList.listId = :listId", Task.class)
+                .setParameter("listId", listId)
                 .getResultList();
     }
 }
