@@ -41,14 +41,14 @@
                 <div class="list-group">
                     <h:form>
                         <h:commandLink value="All Tasks" action="#{taskBean.loadTasks(null)}"
-                                       styleClass="list-group-item list-group-item-action #{taskBean.currentListId == null ? 'active' : ''}"/>
+                                       styleClass="list-group-item list-group-item-action #{taskBean.currentList == null ? 'active' : ''}"/>
                     </h:form>
                     <!-- Task Lists -->
                     <ui:repeat value="#{taskListBean.taskLists}" var="taskList">
                         <h:form>
                             <h:commandLink value="#{taskList.title}"
-                                           action="#{taskBean.loadTasks(taskList.listId)}"
-                                           styleClass="list-group-item list-group-item-action #{taskBean.currentListId == taskList.listId ? 'active' : ''}"/>
+                                           action="#{taskBean.loadTasks(taskList)}"
+                                           styleClass="list-group-item list-group-item-action #{taskBean.currentList == taskList ? 'active' : ''}"/>
                         </h:form>
                     </ui:repeat>
                 </div>
@@ -63,15 +63,20 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addTaskListModalLabel">Add New Task List</h5>
+                            <h5 class="modal-title" id="addTaskListModalLabel">Create New List</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
                         </div>
                         <h:form>
                             <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="taskListName" class="form-label">Task List Name</label>
+                                        <label for="taskListName" class="form-label">List Name</label>
                                         <h:inputText id="taskListName" value="#{taskListBean.newTaskListTitle}"
                                                      class="form-control" required="true"/>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="taskListDescription" class="form-label">Description</label>
+                                        <h:inputText id="taskListDescription" value="#{taskListBean.newTaskListDescription}"
+                                                     class="form-control" required="false"/>
                                     </div>
                             </div>
                             <div class="modal-footer">
@@ -85,7 +90,8 @@
             </div>
             <!-- Task Table (Right Main Area) -->
             <div class="col-9">
-                <h2 class="text-center mb-4">Tasks</h2>
+                <h2 class="text-center mb-4">#{taskBean.currentList != null ? taskBean.currentList.title : 'All Tasks'}</h2>
+                <div class="list-description text-center mb-4" style="white-space: pre-wrap">#{taskBean.currentList != null ? taskBean.currentList.description : ''}</div>
                 <div class="table-responsive">
                     <h:dataTable value="#{taskBean.tasks}" var="task" styleClass="table table-striped table-bordered">
                         <h:column>

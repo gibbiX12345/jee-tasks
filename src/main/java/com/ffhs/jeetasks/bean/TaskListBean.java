@@ -7,6 +7,7 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.Data;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
@@ -20,6 +21,7 @@ public class TaskListBean {
     private LoginBean loginBean;
 
     private String newTaskListTitle;
+    private String newTaskListDescription;
 
     public List<TaskList> getTaskLists() {
         return taskListService.findAllTaskListsForUser();
@@ -28,7 +30,9 @@ public class TaskListBean {
     public void addTaskList() {
         TaskList taskList = new TaskList();
         taskList.setTitle(newTaskListTitle);
+        taskList.setDescription(newTaskListDescription);
         taskList.setUser(loginBean.getUser());
+        taskList.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         taskListService.addTaskList(taskList);
     }
 }

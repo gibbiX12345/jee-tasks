@@ -1,6 +1,7 @@
 package com.ffhs.jeetasks.bean;
 
 import com.ffhs.jeetasks.entity.Task;
+import com.ffhs.jeetasks.entity.TaskList;
 import com.ffhs.jeetasks.service.TaskService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -20,17 +21,17 @@ public class TaskBean {
     private List<Task> tasks;
 
     @Getter
-    private Long currentListId;
+    private TaskList currentList;
 
     public void initBean() {
         if (tasks == null) {
-            tasks = taskService.findAllTasksByListId(currentListId);
+            tasks = taskService.findAllTasksByListId(currentList != null ? currentList.getListId() : null);
         }
     }
 
-    public String loadTasks(Long listId) {
-        this.currentListId = listId;
-        tasks = taskService.findAllTasksByListId(listId);
+    public String loadTasks(TaskList listId) {
+        this.currentList = listId;
+        tasks = taskService.findAllTasksByListId(listId != null ? listId.getListId() : null);
         return null;
     }
 }
