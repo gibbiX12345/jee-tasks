@@ -7,6 +7,7 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Stateless
@@ -22,9 +23,19 @@ public class TaskService {
     }
 
     public List<Task> findAllTasksForUser() {
-        Long userId = loginBean.getUserId();
+        if (loginBean.getUser() == null) return new ArrayList<>();
+        Long userId = loginBean.getUser().getUserId();
         return entityManager.createQuery("SELECT t FROM Task t WHERE t.taskList.user.userId = :userId", Task.class)
                 .setParameter("userId", userId)
+                .getResultList();
+    }
+
+    public List<Task> findAllTasksByListId(Long listId) {
+        if (listId == null) {
+            return findAllTasksForUser();
+        }
+        return entityManager.createQuery("SELECT t FROM Task t WHERE t.taskList.listId = :listId", Task.class)
+                .setParameter("listId", listId)
                 .getResultList();
     }
 }

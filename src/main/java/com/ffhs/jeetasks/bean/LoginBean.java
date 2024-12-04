@@ -24,13 +24,13 @@ public class LoginBean implements Serializable {
 
     private String email;
     private String password;
-    private Long userId;
+    private User user;
 
     public String login() {
         Optional<User> user = userService.findUserByEmail(email);
 
         if (user.isPresent() && BCrypt.checkpw(password, user.get().getPasswordHash())) {
-            this.userId = user.get().getUserId();
+            this.user = user.get();
             return "/taskList?faces-redirect=true";
         } else {
             return "/login?faces-redirect=true";
@@ -38,7 +38,7 @@ public class LoginBean implements Serializable {
     }
 
     public void checkLogin() throws IOException {
-        if (userId == null) {
+        if (user == null) {
             FacesContext.getCurrentInstance().getExternalContext().redirect("login.xhtml");
         }
     }

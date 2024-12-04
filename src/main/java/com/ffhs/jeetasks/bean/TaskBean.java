@@ -5,6 +5,7 @@ import com.ffhs.jeetasks.service.TaskService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import lombok.Getter;
 
 import java.util.List;
 
@@ -15,7 +16,21 @@ public class TaskBean {
     @Inject
     private TaskService taskService;
 
-    public List<Task> getTasks() {
-        return taskService.findAllTasksForUser();
+    @Getter
+    private List<Task> tasks;
+
+    @Getter
+    private Long currentListId;
+
+    public void initBean() {
+        if (tasks == null) {
+            tasks = taskService.findAllTasksByListId(currentListId);
+        }
+    }
+
+    public String loadTasks(Long listId) {
+        this.currentListId = listId;
+        tasks = taskService.findAllTasksByListId(listId);
+        return null;
     }
 }
