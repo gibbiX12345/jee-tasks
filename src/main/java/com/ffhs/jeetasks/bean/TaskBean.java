@@ -22,6 +22,8 @@ import java.util.List;
 @SessionScoped
 public class TaskBean implements Serializable {
 
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+
     @Inject
     private TaskService taskService;
     @Inject
@@ -32,8 +34,6 @@ public class TaskBean implements Serializable {
     private TaskList currentlySelectedList;
 
     private Task taskEdit;
-    private String editTaskTitle;
-    private String editTaskDescription;
 
     private String newTaskTitle;
     private String newTaskDescription;
@@ -52,17 +52,42 @@ public class TaskBean implements Serializable {
     public void prepareForEdit(Task task) {
         taskEdit = task;
         if (task != null) {
-            editTaskTitle = task.getTitle();
-            editTaskDescription = task.getDescription();
+            newTaskTitle = task.getTitle();
+            newTaskDescription = task.getDescription();
+            newTaskStatusId = task.getStatus() != null ? task.getStatus().getStatusId() : null;
+            newTaskPriorityId = task.getPriority() != null ? task.getPriority().getPriorityId() : null;
+            newTaskDueDateString = task.getDueDate() != null ? task.getDueDate().toLocalDateTime().format(formatter) : null;
+        } else {
+            newTaskTitle = "";
+            newTaskDescription = "";
+            newTaskStatusId = null;
+            newTaskPriorityId = null;
+            newTaskDueDateString = "";
         }
     }
 
     public void addTask() {
         Task task = new Task();
+        setTaskData(task);
+        task.setTaskList(currentlySelectedList);
+        taskService.insertModel(task);
+        newTaskTitle = "";
+        newTaskDescription = "";
+    }
+
+    public void saveTask() {
+        if (taskEdit == null) {
+            addTask();
+            return;
+        }
+        setTaskData(taskEdit);
+        taskService.updateModel(taskEdit);
+    }
+
+    private void setTaskData(Task task) {
         task.setTitle(newTaskTitle);
         task.setDescription(newTaskDescription);
-        if (newTaskDueDateString != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        if (newTaskDueDateString != null && !newTaskDueDateString.isEmpty()) {
             LocalDateTime localDateTime = LocalDateTime.parse(newTaskDueDateString, formatter);
             task.setDueDate(Timestamp.valueOf(localDateTime));
         }
@@ -72,16 +97,6 @@ public class TaskBean implements Serializable {
         if (newTaskStatusId != null) {
             task.setStatus(statusService.findStatusById(newTaskStatusId));
         }
-        task.setTaskList(currentlySelectedList);
         task.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        taskService.insertModel(task);
-        newTaskTitle = "";
-        newTaskDescription = "";
-    }
-
-    public void saveTask() {
-        taskEdit.setTitle(editTaskTitle);
-        taskEdit.setDescription(editTaskDescription);
-        taskService.updateModel(taskEdit);
     }
 }

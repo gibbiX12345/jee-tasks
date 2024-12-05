@@ -36,10 +36,12 @@
         </h:column>
         <h:column>
             <f:facet name="header">Edit</f:facet>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#editTaskModal">
-                Edit
-            </button>
+            <h:form>
+                <h:commandButton value="Edit" action="#{taskBean.prepareForEdit(task)}"
+                                 class="btn btn-primary">
+                    <f:ajax event="action" execute="@form" render="@all" onevent="openModal"/>
+                </h:commandButton>
+            </h:form>
         </h:column>
     </h:dataTable>
 </div>
@@ -49,4 +51,15 @@
 </button>
 <ui:include src="forms/edit_task_list_modal.xhtml"/>
 <ui:include src="forms/add_task_modal.xhtml"/>
+
+
+<script type="text/javascript">
+    function openModal(data) {
+        if (data.status === "success") {
+            // Open the modal after the AJAX call is successful
+            const modal = new bootstrap.Modal(document.getElementById('addTaskModal'));
+            modal.show();
+        }
+    }
+</script>
 </html>

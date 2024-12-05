@@ -4,9 +4,10 @@
 <div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" id="addTaskModalContent">
             <div class="modal-header">
-                <h5 class="modal-title" id="addTaskModalLabel">Create New Task</h5>
+                <h5 class="modal-title" id="addTaskModalLabel">
+                    #{taskBean.taskEdit == null ? 'Create New Task' : 'Edit Task'}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
             </div>
             <h:form>
@@ -45,7 +46,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <h:commandButton value="Save" action="#{taskBean.addTask}"
+                    <h:commandButton value="Save" action="#{taskBean.saveTask}"
                                      class="btn btn-primary"/>
                 </div>
             </h:form>
