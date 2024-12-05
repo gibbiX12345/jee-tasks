@@ -42,11 +42,13 @@ public class TaskListBean implements Serializable {
 
     public void addTaskList() {
         TaskList taskList = new TaskList();
-        taskList.setTitle(editTaskListTitle);
-        taskList.setDescription(editTaskListDescription);
+        taskList.setTitle(newTaskListTitle);
+        taskList.setDescription(newTaskListDescription);
         taskList.setUser(loginBean.getUser());
         taskList.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         taskListService.insertModel(taskList);
+        newTaskListTitle = "";
+        newTaskListDescription = "";
     }
 
     public void saveTaskList() {

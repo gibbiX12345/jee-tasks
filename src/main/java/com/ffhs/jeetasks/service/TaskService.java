@@ -2,17 +2,19 @@ package com.ffhs.jeetasks.service;
 
 import com.ffhs.jeetasks.bean.LoginBean;
 import com.ffhs.jeetasks.entity.Task;
+import com.ffhs.jeetasks.entity.TaskList;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Stateless
-public class TaskService {
+public class TaskService implements Serializable {
 
     @PersistenceContext(unitName = "jee-tasks-pu")
     private EntityManager entityManager;
@@ -38,5 +40,13 @@ public class TaskService {
         return entityManager.createQuery("SELECT t FROM Task t WHERE t.taskList.listId = :listId", Task.class)
                 .setParameter("listId", listId)
                 .getResultList();
+    }
+
+    public void insertModel(Task taskList) {
+        entityManager.persist(taskList);
+    }
+
+    public void updateModel(Task taskList) {
+        entityManager.merge(taskList);
     }
 }

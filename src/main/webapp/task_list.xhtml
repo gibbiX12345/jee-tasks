@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h2 class="text-center mb-4">#{taskBean.currentlySelectedList != null ? taskBean.currentlySelectedList.title : 'All Tasks'}</h2>
+<div class="list-description text-center mb-4"
+     style="white-space: pre-wrap">#{taskBean.currentlySelectedList != null ? taskBean.currentlySelectedList.description : ''}</div>
+<c:choose>
+    <c:when test="#{taskBean.currentlySelectedList != null}">
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                data-bs-target="#editTaskListModal">
+            Edit List
+        </button>
+    </c:when>
+</c:choose>
+<div class="table-responsive">
+    <h:dataTable value="#{taskBean.tasks}" var="task" styleClass="table table-striped table-bordered">
+        <h:column>
+            <f:facet name="header">Task ID</f:facet>
+            <h:outputText value="#{task.taskId}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Title</f:facet>
+            <h:outputText value="#{task.title}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Description</f:facet>
+            <h:outputText value="#{task.description}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Due Date</f:facet>
+            <h:outputText value="#{task.dueDate}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Edit</f:facet>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#editTaskModal">
+                Edit
+            </button>
+        </h:column>
+    </h:dataTable>
+</div>
+<button type="button" class="btn btn-primary" data-bs-toggle="modal"
+        data-bs-target="#addTaskModal">
+    Create New Task
+</button>
+<ui:include src="forms/edit_task_list_modal.xhtml"/>
+<ui:include src="forms/add_task_modal.xhtml"/>
+</html>

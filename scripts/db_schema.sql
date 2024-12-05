@@ -55,3 +55,19 @@ CREATE TABLE "comment"
     comment_content    TEXT NOT NULL,
     comment_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+
+INSERT INTO public.priority (priority_id, priority_level) VALUES (DEFAULT, 'Urgent');
+INSERT INTO public.priority (priority_id, priority_level) VALUES (DEFAULT, 'High');
+INSERT INTO public.priority (priority_id, priority_level) VALUES (DEFAULT, 'Normal');
+INSERT INTO public.priority (priority_id, priority_level) VALUES (DEFAULT, 'Low');
+
+
+INSERT INTO public.status (status_id, status_value) VALUES (DEFAULT, 'New');
+INSERT INTO public.status (status_id, status_value) VALUES (DEFAULT, 'Confirmed');
+INSERT INTO public.status (status_id, status_value) VALUES (DEFAULT, 'Planned');
+INSERT INTO public.status (status_id, status_value) VALUES (DEFAULT, 'In Progress');
+INSERT INTO public.status (status_id, status_value) VALUES (DEFAULT, 'Verification');
+INSERT INTO public.status (status_id, status_value) VALUES (DEFAULT, 'Completed');
+INSERT INTO public.status (status_id, status_value) VALUES (DEFAULT, 'On Hold');

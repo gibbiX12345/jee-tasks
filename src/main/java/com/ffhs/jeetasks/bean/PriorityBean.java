@@ -15,7 +15,7 @@ public class PriorityBean {
     @Inject
     private PriorityService priorityService;
 
-    public List<Priority> getPrioritys() {
+    public List<Priority> getPriorities() {
         return priorityService.findAllPriorities();
     }
 }

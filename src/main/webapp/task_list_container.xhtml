@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+>
+<div class="list-group">
+    <h:form>
+        <h:commandLink value="All Tasks" action="#{taskBean.setCurrentList(null)}"
+                       styleClass="list-group-item list-group-item-action #{taskBean.currentlySelectedList == null ? 'active' : ''}"/>
+    </h:form>
+    <!-- Task Lists -->
+    <ui:repeat value="#{taskListBean.taskLists}" var="taskList">
+        <h:form>
+            <h:commandLink value="#{taskList.title}"
+                           action="#{taskBean.setCurrentList(taskList)}"
+                           actionListener="#{taskListBean.prepareForEdit(taskList)}"
+                           styleClass="list-group-item list-group-item-action #{taskBean.currentlySelectedList == taskList ? 'active' : ''}"/>
+        </h:form>
+    </ui:repeat>
+</div>
+<button type="button" class="btn btn-primary mt-3" data-bs-toggle="modal"
+        data-bs-target="#addTaskListModal">
+    Create New List
+</button>
+<ui:include src="forms/add_task_list_modal.xhtml"/>
+</html>

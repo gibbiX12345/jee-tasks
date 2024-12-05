@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+<div class="modal fade" id="addTaskModal" tabindex="-1" aria-labelledby="addTaskModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTaskModalLabel">Create New Task</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+            </div>
+            <h:form>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="addTaskName" class="form-label">Title</label>
+                        <h:inputText id="addTaskName" value="#{taskBean.newTaskTitle}"
+                                     class="form-control" required="true"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addTaskDescription" class="form-label">Description</label>
+                        <h:inputText id="addTaskDescription" value="#{taskBean.newTaskDescription}"
+                                     class="form-control" required="false"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addTaskDueDate" class="form-label">Due Date</label>
+                        <h:inputText id="addTaskDueDate" value="#{taskBean.newTaskDueDateString}"
+                                     class="form-control" required="false" type="datetime-local"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addTaskPriority" class="form-label">Priority</label>
+                        <h:selectOneMenu id="addTaskPriority" value="#{taskBean.newTaskPriorityId}"
+                                         class="form-control">
+                            <f:selectItems value="#{priorityBean.priorities}" var="priority"
+                                           itemValue="#{priority.priorityId}" itemLabel="#{priority.level}"/>
+                        </h:selectOneMenu>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addTaskStatus" class="form-label">Status</label>
+                        <h:selectOneMenu id="addTaskStatus" value="#{taskBean.newTaskStatusId}"
+                                         class="form-control">
+                            <f:selectItems value="#{statusBean.statuses}" var="status" itemValue="#{status.statusId}"
+                                           itemLabel="#{status.value}"/>
+                        </h:selectOneMenu>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <h:commandButton value="Save" action="#{taskBean.addTask}"
+                                     class="btn btn-primary"/>
+                </div>
+            </h:form>
+        </div>
+    </div>
+</div>
+</html>

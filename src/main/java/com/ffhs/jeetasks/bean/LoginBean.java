@@ -31,7 +31,7 @@ public class LoginBean implements Serializable {
 
         if (user.isPresent() && BCrypt.checkpw(password, user.get().getPasswordHash())) {
             this.user = user.get();
-            return "/taskList?faces-redirect=true";
+            return "/index?faces-redirect=true";
         } else {
             return "/login?faces-redirect=true";
         }
