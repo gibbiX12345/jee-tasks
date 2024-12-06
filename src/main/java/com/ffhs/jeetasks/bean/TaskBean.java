@@ -12,7 +12,6 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -35,11 +34,11 @@ public class TaskBean implements Serializable {
 
     private Task taskEdit;
 
-    private String newTaskTitle;
-    private String newTaskDescription;
-    private String newTaskDueDateString;
-    private Long newTaskPriorityId;
-    private Long newTaskStatusId;
+    private String taskTitle;
+    private String taskDescription;
+    private String taskDueDateString;
+    private Long taskPriorityId;
+    private Long taskStatusId;
 
     public List<Task> getTasks() {
         return taskService.findAllTasksByListId(currentlySelectedList != null ? currentlySelectedList.getListId() : null);
@@ -52,17 +51,17 @@ public class TaskBean implements Serializable {
     public void prepareForEdit(Task task) {
         taskEdit = task;
         if (task != null) {
-            newTaskTitle = task.getTitle();
-            newTaskDescription = task.getDescription();
-            newTaskStatusId = task.getStatus() != null ? task.getStatus().getStatusId() : null;
-            newTaskPriorityId = task.getPriority() != null ? task.getPriority().getPriorityId() : null;
-            newTaskDueDateString = task.getDueDate() != null ? task.getDueDate().toLocalDateTime().format(formatter) : null;
+            taskTitle = task.getTitle();
+            taskDescription = task.getDescription();
+            taskStatusId = task.getStatus() != null ? task.getStatus().getStatusId() : null;
+            taskPriorityId = task.getPriority() != null ? task.getPriority().getPriorityId() : null;
+            taskDueDateString = task.getDueDate() != null ? task.getDueDate().toLocalDateTime().format(formatter) : null;
         } else {
-            newTaskTitle = "";
-            newTaskDescription = "";
-            newTaskStatusId = null;
-            newTaskPriorityId = null;
-            newTaskDueDateString = "";
+            taskTitle = "";
+            taskDescription = "";
+            taskStatusId = null;
+            taskPriorityId = null;
+            taskDueDateString = "";
         }
     }
 
@@ -71,8 +70,8 @@ public class TaskBean implements Serializable {
         setTaskData(task);
         task.setTaskList(currentlySelectedList);
         taskService.insertModel(task);
-        newTaskTitle = "";
-        newTaskDescription = "";
+        taskTitle = "";
+        taskDescription = "";
     }
 
     public void saveTask() {
@@ -91,17 +90,17 @@ public class TaskBean implements Serializable {
     }
 
     private void setTaskData(Task task) {
-        task.setTitle(newTaskTitle);
-        task.setDescription(newTaskDescription);
-        if (newTaskDueDateString != null && !newTaskDueDateString.isEmpty()) {
-            LocalDateTime localDateTime = LocalDateTime.parse(newTaskDueDateString, formatter);
+        task.setTitle(taskTitle);
+        task.setDescription(taskDescription);
+        if (taskDueDateString != null && !taskDueDateString.isEmpty()) {
+            LocalDateTime localDateTime = LocalDateTime.parse(taskDueDateString, formatter);
             task.setDueDate(Timestamp.valueOf(localDateTime));
         }
-        if (newTaskPriorityId != null) {
-            task.setPriority(priorityService.findPriorityById(newTaskPriorityId));
+        if (taskPriorityId != null) {
+            task.setPriority(priorityService.findPriorityById(taskPriorityId));
         }
-        if (newTaskStatusId != null) {
-            task.setStatus(statusService.findStatusById(newTaskStatusId));
+        if (taskStatusId != null) {
+            task.setStatus(statusService.findStatusById(taskStatusId));
         }
         task.setCreatedAt(new Timestamp(System.currentTimeMillis()));
     }

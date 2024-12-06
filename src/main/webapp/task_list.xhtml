@@ -55,21 +55,23 @@
 </div>
 <c:choose>
     <c:when test="#{taskBean.currentlySelectedList != null}">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                data-bs-target="#addTaskModal">
-            Create New Task
-        </button>
+        <h:form>
+            <h:commandButton value="Create New Task" action="#{taskBean.prepareForEdit(null)}"
+                             class="btn btn-primary">
+                <f:ajax event="action" execute="@form" render="@all" onevent="openModal"/>
+            </h:commandButton>
+        </h:form>
     </c:when>
 </c:choose>
 <ui:include src="forms/edit_task_list_modal.xhtml"/>
-<ui:include src="forms/add_task_modal.xhtml"/>
+<ui:include src="forms/task_edit_mask.xhtml"/>
 
 
 <script type="text/javascript">
     function openModal(data) {
         if (data.status === "success") {
             // Open the modal after the AJAX call is successful
-            const modal = new bootstrap.Modal(document.getElementById('addTaskModal'));
+            const modal = new bootstrap.Modal(document.getElementById('taskEditMaskModal'));
             modal.show();
         }
     }
