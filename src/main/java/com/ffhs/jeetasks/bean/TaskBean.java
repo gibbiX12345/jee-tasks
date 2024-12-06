@@ -39,6 +39,7 @@ public class TaskBean implements Serializable {
     private UserService userService;
 
     private TaskList currentlySelectedList;
+    private TECHNICAL_LIST_TYPE currentlySelectedListType = TECHNICAL_LIST_TYPE.ALL_TASKS;
 
     private Task taskEdit;
 
@@ -54,8 +55,12 @@ public class TaskBean implements Serializable {
     private String sortColumn = "taskId";
     private boolean ascending = true;
 
+    public enum TECHNICAL_LIST_TYPE {CUSTOM_LIST, ALL_TASKS, MY_ASSIGNED_TASKS}
+
+    ;
+
     public Map<Status, List<Task>> getTasks() {
-        List<Task> tasks = taskService.findAllTasksByListId(currentlySelectedList != null ? currentlySelectedList.getListId() : null, sortColumn, ascending);
+        List<Task> tasks = taskService.findAllTasksByListId(currentlySelectedList != null ? currentlySelectedList.getListId() : null, sortColumn, ascending, currentlySelectedListType);
         if (groupByStatus) {
             return tasks.stream()
                     .collect(Collectors.groupingBy(
@@ -83,8 +88,9 @@ public class TaskBean implements Serializable {
         return defaultStatus;
     }
 
-    public void setCurrentList(TaskList currentList) {
+    public void setCurrentList(TaskList currentList, TECHNICAL_LIST_TYPE type) {
         this.currentlySelectedList = currentList;
+        this.currentlySelectedListType = type;
     }
 
     public void prepareForEdit(Task task) {

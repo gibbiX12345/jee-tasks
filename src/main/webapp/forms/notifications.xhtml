@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:f="http://java.sun.com/jsf/core"
+>
+<div class="notification-popup position-absolute mt-5" id="notificationPopup"
+     style="display: none; right: 100px; top: 0; width: 300px; z-index: 1050;">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            Notifications
+        </div>
+        <h:form id="notificationForm">
+            <div class="card-body" style="max-height: 300px; overflow-y: auto;">
+                <ui:fragment rendered="#{notificationBean.openNotifications.size() == 0}">
+                    You're all done! :)
+                </ui:fragment>
+                <ui:repeat value="#{notificationBean.openNotifications}" var="notification">
+                    <div class="notification-item mb-2">
+                        <p><strong>#{notification.text}</strong></p>
+                        <c:if test="#{notification.link != null}">
+                            <a href="#{notification.link}" class="btn btn-link">View</a>
+                        </c:if>
+                        <h:commandButton value="Dismiss" action="#{notificationBean.dismissNotification(notification)}"
+                                         class="btn btn-sm btn-outline-secondary">
+                            <f:ajax execute="@form" render="@all" onevent="onNotificationDismissCompleted"/>
+                        </h:commandButton>
+                    </div>
+                </ui:repeat>
+            </div>
+        </h:form>
+    </div>
+</div>
+</html>

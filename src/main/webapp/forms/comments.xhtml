@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://xmlns.jcp.org/jsf/core"
 >
 <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -21,7 +21,8 @@
                                     <p class="card-text">
                                         <strong>#{comment.user.email}</strong>: #{comment.content}
                                     </p>
-                                    <p class="text-muted" style="font-size: 0.8em;">#{comment.getFormattedCreatedAt()}</p>
+                                    <p class="text-muted"
+                                       style="font-size: 0.8em;">#{comment.getFormattedCreatedAt()}</p>
                                 </div>
                             </div>
                         </ui:repeat>
@@ -32,7 +33,7 @@
                                      class="form-control"
                                      placeholder="Write a comment..." required="true"/>
                         <h:commandButton value="Submit" action="#{commentBean.addComment}" class="btn btn-primary">
-                            <f:ajax execute="@form" render="commentForm" onevent="onCommentSubmitCompleted"/>
+                            <c:ajax execute="@form" render="commentForm" onevent="onCommentSubmitCompleted"/>
                         </h:commandButton>
                     </div>
                 </h:form>

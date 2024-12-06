@@ -28,7 +28,6 @@ function openCommentModal(data) {
 
 function onCommentSubmitCompleted(data) {
     if (data.status === "success") {
-        // Scroll to the bottom of the comment list after the AJAX update completes
         scrollToBottom('commentList');
         focusElement('commentForm:newCommentContent');
     }
@@ -47,3 +46,30 @@ function focusElement(elementId) {
         element.focus();
     }
 }
+
+function showNotificationPopup() {
+    const notificationPopup = document.getElementById("notificationPopup");
+    notificationPopup.style.display = "block";
+}
+
+function triggerNotificationButtonAction() {
+    const button = document.querySelector("[id$=':notificationButton']");
+    if (button) {
+        button.click();
+    }
+}
+
+function onNotificationDismissCompleted(data) {
+    if (data.status === "success") {
+        showNotificationPopup();
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("click", function (event) {
+        const notificationPopup = document.getElementById("notificationPopup");
+        if (notificationPopup.style.display === "block" && !notificationPopup.contains(event.target)) {
+            document.getElementById("notificationPopup").style.display = "none";
+        }
+    });
+});

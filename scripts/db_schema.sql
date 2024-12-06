@@ -4,6 +4,7 @@ DROP TABLE "priority";
 DROP TABLE "status";
 DROP TABLE "task_list";
 DROP TABLE "app_user";
+DROP TABLE "notification";
 
 
 CREATE TABLE "app_user"
@@ -58,6 +59,18 @@ CREATE TABLE "comment"
     comment_content    TEXT NOT NULL,
     comment_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE "notification"
+(
+    notification_id          SERIAL PRIMARY KEY,
+    notification_user_id     INT REFERENCES "app_user" (app_user_id),
+    notification_text        VARCHAR(1000) NOT NULL,
+    notification_link        VARCHAR(300),
+    notification_dismissed   BOOLEAN NOT NULL DEFAULT FALSE,
+    notification_created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
 
 
 

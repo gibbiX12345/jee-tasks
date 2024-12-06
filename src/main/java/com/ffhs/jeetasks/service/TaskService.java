@@ -1,9 +1,10 @@
 package com.ffhs.jeetasks.service;
 
-import com.ffhs.jeetasks.entity.Priority;
-import com.ffhs.jeetasks.entity.Status;
+import com.ffhs.jeetasks.bean.LoginBean;
+import com.ffhs.jeetasks.bean.TaskBean;
 import com.ffhs.jeetasks.entity.Task;
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
@@ -17,14 +18,27 @@ public class TaskService implements Serializable {
     @PersistenceContext(unitName = "jee-tasks-pu")
     private EntityManager entityManager;
 
-    public List<Task> findAllTasksByListId(Long listId, String sortColumn, boolean ascending) {
+    @Inject
+    private LoginBean loginBean;
+
+    public List<Task> findAllTasksByListId(Long listId, String sortColumn, boolean ascending, TaskBean.TECHNICAL_LIST_TYPE type) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Task> query = cb.createQuery(Task.class);
         Root<Task> task = query.from(Task.class);
 
-        if (listId != null) {
-            Predicate listIdPredicate = cb.equal(task.get("taskList").get("listId"), listId);
-            query.where(listIdPredicate);
+        Predicate listIdPredicate = cb.equal(task.get("taskList").get("listId"), listId);
+        Predicate userIdPredicate = cb.equal(task.get("taskList").get("user").get("userId"), loginBean.getUser().getUserId());
+        Predicate assignedUserIdPredicate = cb.equal(task.get("assignedUser").get("userId"), loginBean.getUser().getUserId());
+        switch (type) {
+            case CUSTOM_LIST:
+                query.where(listIdPredicate);
+                break;
+            case ALL_TASKS:
+                query.where(cb.or(userIdPredicate, assignedUserIdPredicate));
+                break;
+            case MY_ASSIGNED_TASKS:
+                query.where(assignedUserIdPredicate);
+                break;
         }
         Order order;
         if (sortColumn.contains(".")) {

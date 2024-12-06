@@ -5,14 +5,18 @@
 >
 <div class="list-group">
     <h:form>
-        <h:commandLink value="All Tasks" action="#{taskBean.setCurrentList(null)}"
-                       styleClass="list-group-item list-group-item-action #{taskBean.currentlySelectedList == null ? 'active' : ''}"/>
+        <h:commandLink value="All Tasks" action="#{taskBean.setCurrentList(null, 'ALL_TASKS')}"
+                       styleClass="list-group-item list-group-item-action #{taskBean.currentlySelectedListType == 'ALL_TASKS' ? 'active' : ''}"/>
+    </h:form>
+    <h:form>
+        <h:commandLink value="Assigned to me" action="#{taskBean.setCurrentList(null, 'MY_ASSIGNED_TASKS')}"
+                       styleClass="list-group-item list-group-item-action #{taskBean.currentlySelectedListType == 'MY_ASSIGNED_TASKS' ? 'active' : ''}"/>
     </h:form>
     <!-- Task Lists -->
     <ui:repeat value="#{taskListBean.taskLists}" var="taskList">
         <h:form>
             <h:commandLink value="#{taskList.title}"
-                           action="#{taskBean.setCurrentList(taskList)}"
+                           action="#{taskBean.setCurrentList(taskList, 'CUSTOM_LIST')}"
                            actionListener="#{taskListBean.prepareForEdit(taskList)}"
                            styleClass="list-group-item list-group-item-action #{taskBean.currentlySelectedList == taskList ? 'active' : ''}"/>
         </h:form>
