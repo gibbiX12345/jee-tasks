@@ -1,16 +1,14 @@
 package com.ffhs.jeetasks.service;
 
-import com.ffhs.jeetasks.bean.LoginBean;
+import com.ffhs.jeetasks.entity.Priority;
+import com.ffhs.jeetasks.entity.Status;
 import com.ffhs.jeetasks.entity.Task;
-import com.ffhs.jeetasks.entity.TaskList;
 import jakarta.ejb.Stateless;
-import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import lombok.Getter;
+import jakarta.persistence.criteria.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Stateless
@@ -18,28 +16,28 @@ public class TaskService implements Serializable {
 
     @PersistenceContext(unitName = "jee-tasks-pu")
     private EntityManager entityManager;
-    @Inject
-    private LoginBean loginBean;
 
-    public List<Task> findAllTasks() {
-        return entityManager.createQuery("SELECT t FROM Task t", Task.class).getResultList();
-    }
+    public List<Task> findAllTasksByListId(Long listId, String sortColumn, boolean ascending) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Task> query = cb.createQuery(Task.class);
+        Root<Task> task = query.from(Task.class);
 
-    public List<Task> findAllTasksForUser() {
-        if (loginBean.getUser() == null) return new ArrayList<>();
-        Long userId = loginBean.getUser().getUserId();
-        return entityManager.createQuery("SELECT t FROM Task t WHERE t.taskList.user.userId = :userId ORDER BY t.taskId", Task.class)
-                .setParameter("userId", userId)
-                .getResultList();
-    }
-
-    public List<Task> findAllTasksByListId(Long listId) {
-        if (listId == null) {
-            return findAllTasksForUser();
+        if (listId != null) {
+            Predicate listIdPredicate = cb.equal(task.get("taskList").get("listId"), listId);
+            query.where(listIdPredicate);
         }
-        return entityManager.createQuery("SELECT t FROM Task t WHERE t.taskList.listId = :listId ORDER BY t.taskId", Task.class)
-                .setParameter("listId", listId)
-                .getResultList();
+        Order order;
+        if (sortColumn.contains(".")) {
+            String object = sortColumn.substring(0, sortColumn.indexOf("."));
+            String property = sortColumn.substring(sortColumn.indexOf(".") + 1);
+            Join<Task, Object> objectJoin = task.join(object, JoinType.LEFT);
+            order = ascending ? cb.asc(objectJoin.get(property)) : cb.desc(objectJoin.get(property));
+        } else {
+            order = ascending ? cb.asc(task.get(sortColumn)) : cb.desc(task.get(sortColumn));
+        }
+        query.orderBy(order);
+
+        return entityManager.createQuery(query).getResultList();
     }
 
     public void insertModel(Task task) {

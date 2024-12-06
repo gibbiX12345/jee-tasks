@@ -47,8 +47,11 @@ public class TaskBean implements Serializable {
 
     private boolean groupByStatus = false;
 
+    private String sortColumn = "taskId";
+    private boolean ascending = true;
+
     public Map<Status, List<Task>> getTasks() {
-        List<Task> tasks = taskService.findAllTasksByListId(currentlySelectedList != null ? currentlySelectedList.getListId() : null);
+        List<Task> tasks = taskService.findAllTasksByListId(currentlySelectedList != null ? currentlySelectedList.getListId() : null, sortColumn, ascending);
         if (groupByStatus) {
             return tasks.stream()
                     .collect(Collectors.groupingBy(
@@ -139,5 +142,15 @@ public class TaskBean implements Serializable {
 
     public void toggleGroupByStatus() {
         groupByStatus = !groupByStatus;
+    }
+
+
+    public void sortBy(String column) {
+        if (sortColumn.equals(column)) {
+            ascending = !ascending;
+        } else {
+            sortColumn = column;
+            ascending = true;
+        }
     }
 }

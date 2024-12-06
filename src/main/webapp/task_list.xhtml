@@ -26,32 +26,56 @@
 <div class="table-responsive">
     <ui:repeat value="#{taskBean.tasks}" var="entry">
         <ui:fragment rendered="#{taskBean.groupByStatus}">
-        <h5>#{entry.key.value}</h5>
+            <h5>#{entry.key.value}</h5>
         </ui:fragment>
         <div class="table-responsive mb-4">
             <h:dataTable value="#{entry.value}" var="task" styleClass="table table-striped table-bordered">
                 <h:column>
-                    <f:facet name="header">Task ID</f:facet>
+                    <f:facet name="header">
+                        <h:form>
+                            <h:commandLink action="#{taskBean.sortBy('taskId')}" value="Task ID"/>
+                        </h:form>
+                    </f:facet>
                     <h:outputText value="#{task.taskId}"/>
                 </h:column>
                 <h:column>
-                    <f:facet name="header">Title</f:facet>
+                    <f:facet name="header">
+                        <h:form>
+                            <h:commandLink action="#{taskBean.sortBy('title')}" value="Title"/>
+                        </h:form>
+                    </f:facet>
                     <h:outputText value="#{task.title}"/>
                 </h:column>
                 <h:column>
-                    <f:facet name="header">Description</f:facet>
+                    <f:facet name="header">
+                        <h:form>
+                            <h:commandLink action="#{taskBean.sortBy('description')}" value="Description"/>
+                        </h:form>
+                    </f:facet>
                     <h:outputText value="#{task.description}"/>
                 </h:column>
                 <h:column>
-                    <f:facet name="header">Priority</f:facet>
+                    <f:facet name="header">
+                        <h:form>
+                            <h:commandLink action="#{taskBean.sortBy('priority.order')}" value="Priority"/>
+                        </h:form>
+                    </f:facet>
                     <h:outputText value="#{task.priority != null ? task.priority.level : '-'}"/>
                 </h:column>
                 <h:column>
-                    <f:facet name="header">Status</f:facet>
+                    <f:facet name="header">
+                        <h:form>
+                            <h:commandLink action="#{taskBean.sortBy('status.order')}" value="Status"/>
+                        </h:form>
+                    </f:facet>
                     <h:outputText value="#{task.status != null ? task.status.value : '-'}"/>
                 </h:column>
                 <h:column>
-                    <f:facet name="header">Due Date</f:facet>
+                    <f:facet name="header">
+                        <h:form>
+                            <h:commandLink action="#{taskBean.sortBy('dueDate')}" value="Due Date"/>
+                        </h:form>
+                    </f:facet>
                     <h:outputText value="#{task.getFormattedDueDate()}"/>
                 </h:column>
                 <h:column>

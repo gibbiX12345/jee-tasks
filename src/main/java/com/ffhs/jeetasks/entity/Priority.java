@@ -15,4 +15,7 @@ public class Priority {
 
     @Column(name = "priority_level", nullable = false)
     private String level;
+
+    @Column(name = "priority_order", nullable = false)
+    private Integer order;
 }

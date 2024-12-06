@@ -15,7 +15,7 @@ public class PriorityService implements Serializable {
     private EntityManager entityManager;
 
     public List<Priority> findAllPriorities() {
-        return entityManager.createQuery("SELECT p FROM Priority p", Priority.class).getResultList();
+        return entityManager.createQuery("SELECT p FROM Priority p ORDER BY p.order", Priority.class).getResultList();
     }
 
     public Priority findPriorityById(Long id) {

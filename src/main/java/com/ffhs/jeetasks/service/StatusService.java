@@ -16,7 +16,7 @@ public class StatusService implements Serializable {
     private EntityManager entityManager;
 
     public List<Status> findAllStatuses() {
-        return entityManager.createQuery("SELECT s FROM Status s", Status.class).getResultList();
+        return entityManager.createQuery("SELECT s FROM Status s ORDER BY s.order", Status.class).getResultList();
     }
 
     public Status findStatusById(Long id) {
