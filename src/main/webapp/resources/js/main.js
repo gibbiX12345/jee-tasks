@@ -59,6 +59,13 @@ function triggerNotificationButtonAction() {
     }
 }
 
+function triggerNotificationReloadButtonAction() {
+    const button = document.querySelector("[id$=':reloadNotificationsButton']");
+    if (button) {
+        button.click();
+    }
+}
+
 function onNotificationDismissCompleted(data) {
     if (data.status === "success") {
         showNotificationPopup();

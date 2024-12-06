@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:f="jakarta.faces.core"
 >
 <header class="py-3 container-fluid w-100">
     <div class="row gx-0 justify-content-between align-items-center">
@@ -23,6 +23,10 @@
                 <h:commandButton id="notificationButton" action="#{notificationBean.loadOpenNotifications}"
                                  style="display: none;">
                     <f:ajax event="action" execute="@form" render="@all" onevent="showNotificationPopup"/>
+                </h:commandButton>
+                <h:commandButton id="reloadNotificationsButton" action="#{notificationBean.loadOpenNotifications}"
+                                 style="display: none;">
+                    <f:ajax event="action" execute="@form" render="@all" onevent="console.log('reload done')"/>
                 </h:commandButton>
             </h:form>
             <h:form>

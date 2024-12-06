@@ -42,6 +42,8 @@ public class TaskBean implements Serializable {
     private NotificationService notificationService;
     @Inject
     private LoginBean loginBean;
+    @Inject
+    private PushBean pushBean;
 
     private TaskList currentlySelectedList;
     private TECHNICAL_LIST_TYPE currentlySelectedListType = TECHNICAL_LIST_TYPE.ALL_TASKS;
@@ -128,7 +130,7 @@ public class TaskBean implements Serializable {
         setTaskData(task);
         task.setTaskList(currentlySelectedList);
         taskService.insertModel(task);
-        createNotifications(task);
+        createNotifications(task, true);
         taskTitle = "";
         taskDescription = "";
     }
@@ -138,7 +140,7 @@ public class TaskBean implements Serializable {
             addTask();
             return;
         }
-        createNotifications(taskEdit);
+        createNotifications(taskEdit, false);
         setTaskData(taskEdit);
         taskService.updateModel(taskEdit);
     }
@@ -168,7 +170,7 @@ public class TaskBean implements Serializable {
         task.setCreatedAt(new Timestamp(System.currentTimeMillis()));
     }
 
-    private void createNotifications(Task task) {
+    private void createNotifications(Task task, boolean isNew) {
         FacesContext context = FacesContext.getCurrentInstance();
         HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
 
@@ -182,10 +184,11 @@ public class TaskBean implements Serializable {
                 .append(request.getServletPath())
                 .append("?taskId=").append(task.getTaskId());
 
-        if (taskAssigendUserId != null && (task.getAssignedUser() == null || !task.getAssignedUser().getUserId().equals(taskAssigendUserId))) {
+        if (taskAssigendUserId != null && (isNew || task.getAssignedUser() == null || !task.getAssignedUser().getUserId().equals(taskAssigendUserId))) {
             if (!taskAssigendUserId.equals(loginBean.getUser().getUserId())) {
                 String notificationText = "Task '" + taskTitle + "' was assigned to you by user " + loginBean.getUser().getEmail();
                 notificationService.createNotification(notificationText, userService.findUserById(taskAssigendUserId), url.toString());
+                pushBean.sendPushMessage("notification created");
             }
         }
 
