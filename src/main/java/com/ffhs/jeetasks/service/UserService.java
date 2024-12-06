@@ -27,6 +27,13 @@ public class UserService implements Serializable {
                 .findFirst();
     }
 
+    public User findUserById(Long userId) {
+        return entityManager
+                .createQuery("SELECT u FROM User u WHERE u.userId = :userId", User.class)
+                .setParameter("userId", userId)
+                .getSingleResult();
+    }
+
     public void registerUser(User user) {
         entityManager.persist(user);
     }

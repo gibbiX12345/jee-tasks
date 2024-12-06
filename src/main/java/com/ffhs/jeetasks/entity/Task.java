@@ -33,6 +33,10 @@ public class Task {
     @Column(name = "task_title", nullable = false)
     private String title;
 
+    @ManyToOne
+    @JoinColumn(name = "task_assigned_user_id")
+    private User assignedUser;
+
     @Column(name = "task_description")
     private String description;
 

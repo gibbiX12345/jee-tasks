@@ -6,6 +6,7 @@ import com.ffhs.jeetasks.entity.TaskList;
 import com.ffhs.jeetasks.service.PriorityService;
 import com.ffhs.jeetasks.service.StatusService;
 import com.ffhs.jeetasks.service.TaskService;
+import com.ffhs.jeetasks.service.UserService;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -34,6 +35,8 @@ public class TaskBean implements Serializable {
     private PriorityService priorityService;
     @Inject
     private StatusService statusService;
+    @Inject
+    private UserService userService;
 
     private TaskList currentlySelectedList;
 
@@ -42,6 +45,7 @@ public class TaskBean implements Serializable {
     private String taskTitle;
     private String taskDescription;
     private String taskDueDateString;
+    private Long taskAssigendUserId;
     private Long taskPriorityId;
     private Long taskStatusId;
 
@@ -88,12 +92,14 @@ public class TaskBean implements Serializable {
         if (task != null) {
             taskTitle = task.getTitle();
             taskDescription = task.getDescription();
+            taskAssigendUserId = task.getAssignedUser() != null ? task.getAssignedUser().getUserId() : null;
             taskStatusId = task.getStatus() != null ? task.getStatus().getStatusId() : null;
             taskPriorityId = task.getPriority() != null ? task.getPriority().getPriorityId() : null;
             taskDueDateString = task.getDueDate() != null ? task.getDueDate().toLocalDateTime().format(formatter) : null;
         } else {
             taskTitle = "";
             taskDescription = "";
+            taskAssigendUserId = null;
             taskStatusId = null;
             taskPriorityId = null;
             taskDueDateString = "";
@@ -127,6 +133,9 @@ public class TaskBean implements Serializable {
     private void setTaskData(Task task) {
         task.setTitle(taskTitle);
         task.setDescription(taskDescription);
+        if (taskAssigendUserId != null) {
+            task.setAssignedUser(userService.findUserById(taskAssigendUserId));
+        }
         if (taskDueDateString != null && !taskDueDateString.isEmpty()) {
             LocalDateTime localDateTime = LocalDateTime.parse(taskDueDateString, formatter);
             task.setDueDate(Timestamp.valueOf(localDateTime));

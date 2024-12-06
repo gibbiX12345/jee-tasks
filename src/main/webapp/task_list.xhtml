@@ -57,6 +57,14 @@
                 <h:column>
                     <f:facet name="header">
                         <h:form>
+                            <h:commandLink action="#{taskBean.sortBy('assignedUser.email')}" value="Assignee"/>
+                        </h:form>
+                    </f:facet>
+                    <h:outputText value="#{task.assignedUser.email}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">
+                        <h:form>
                             <h:commandLink action="#{taskBean.sortBy('priority.order')}" value="Priority"/>
                         </h:form>
                     </f:facet>

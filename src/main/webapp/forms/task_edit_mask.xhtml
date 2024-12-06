@@ -23,6 +23,14 @@
                                      class="form-control" required="false"/>
                     </div>
                     <div class="mb-3">
+                        <label for="taskEditMaskAssignee" class="form-label">Assignee</label>
+                        <h:selectOneMenu id="taskEditMaskAssignee" value="#{taskBean.taskAssigendUserId}"
+                                         class="form-control">
+                            <f:selectItems value="#{userBean.users}" var="user"
+                                           itemValue="#{user.userId}" itemLabel="#{user.email}"/>
+                        </h:selectOneMenu>
+                    </div>
+                    <div class="mb-3">
                         <label for="taskEditMaskDueDate" class="form-label">Due Date</label>
                         <h:inputText id="taskEditMaskDueDate" value="#{taskBean.taskDueDateString}"
                                      class="form-control" required="false" type="datetime-local"/>

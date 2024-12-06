@@ -19,11 +19,12 @@ public class RegistrationBean {
     private String email;
     private String password;
 
-    public void registerUser() {
+    public String registerUser() {
         User user = new User();
         user.setEmail(email);
         user.setPasswordHash(BCrypt.hashpw(password, BCrypt.gensalt()));
         userService.registerUser(user);
+        return "/login?faces-redirect=true";
     }
 }
 
