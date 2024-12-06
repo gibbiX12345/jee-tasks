@@ -1,5 +1,6 @@
 package com.ffhs.jeetasks.bean;
 
+import com.ffhs.jeetasks.entity.Status;
 import com.ffhs.jeetasks.entity.Task;
 import com.ffhs.jeetasks.entity.TaskList;
 import com.ffhs.jeetasks.service.PriorityService;
@@ -14,7 +15,11 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Data
 @Named
@@ -40,8 +45,35 @@ public class TaskBean implements Serializable {
     private Long taskPriorityId;
     private Long taskStatusId;
 
-    public List<Task> getTasks() {
-        return taskService.findAllTasksByListId(currentlySelectedList != null ? currentlySelectedList.getListId() : null);
+    private boolean groupByStatus = false;
+
+    public Map<Status, List<Task>> getTasks() {
+        List<Task> tasks = taskService.findAllTasksByListId(currentlySelectedList != null ? currentlySelectedList.getListId() : null);
+        if (groupByStatus) {
+            return tasks.stream()
+                    .collect(Collectors.groupingBy(
+                            task -> task.getStatus() != null ? task.getStatus() : getDefaultStatus(),
+                            LinkedHashMap::new,
+                            Collectors.toList()
+                    ))
+                    .entrySet()
+                    .stream()
+                    .sorted(Comparator.comparing(entry -> entry.getKey().getOrder() != null ? entry.getKey().getOrder() : Integer.MAX_VALUE))
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            Map.Entry::getValue,
+                            (e1, e2) -> e1,
+                            LinkedHashMap::new
+                    ));
+        }
+        return tasks.stream().collect(Collectors.groupingBy(task -> getDefaultStatus(), LinkedHashMap::new, Collectors.toList()));
+    }
+
+    private Status getDefaultStatus() {
+        Status defaultStatus = new Status();
+        defaultStatus.setValue("No Status");
+        defaultStatus.setOrder(Integer.MAX_VALUE);
+        return defaultStatus;
     }
 
     public void setCurrentList(TaskList currentList) {
@@ -103,5 +135,9 @@ public class TaskBean implements Serializable {
             task.setStatus(statusService.findStatusById(taskStatusId));
         }
         task.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+    }
+
+    public void toggleGroupByStatus() {
+        groupByStatus = !groupByStatus;
     }
 }

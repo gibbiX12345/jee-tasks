@@ -18,51 +18,63 @@
         </h:form>
     </c:when>
 </c:choose>
+<h:form>
+    <h:commandButton value="#{taskBean.groupByStatus ? 'Ungroup by Status' : 'Group by Status'}"
+                     action="#{taskBean.toggleGroupByStatus}"
+                     class="btn btn-secondary mb-3"/>
+</h:form>
 <div class="table-responsive">
-    <h:dataTable value="#{taskBean.tasks}" var="task" styleClass="table table-striped table-bordered">
-        <h:column>
-            <f:facet name="header">Task ID</f:facet>
-            <h:outputText value="#{task.taskId}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header">Title</f:facet>
-            <h:outputText value="#{task.title}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header">Description</f:facet>
-            <h:outputText value="#{task.description}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header">Priority</f:facet>
-            <h:outputText value="#{task.priority != null ? task.priority.level : '-'}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header">Status</f:facet>
-            <h:outputText value="#{task.status != null ? task.status.value : '-'}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header">Due Date</f:facet>
-            <h:outputText value="#{task.getFormattedDueDate()}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header">Comments</f:facet>
-            <h:form>
-                <h:commandButton value="Comments" action="#{commentBean.loadCommentsForTask(task)}"
-                                 class="btn btn-primary">
-                    <f:ajax event="action" execute="@form" render="@all" onevent="openCommentModal"/>
-                </h:commandButton>
-            </h:form>
-        </h:column>
-        <h:column>
-            <f:facet name="header">Edit</f:facet>
-            <h:form>
-                <h:commandButton value="Edit" action="#{taskBean.prepareForEdit(task)}"
-                                 class="btn btn-primary">
-                    <f:ajax event="action" execute="@form" render="@all" onevent="openTaskModal"/>
-                </h:commandButton>
-            </h:form>
-        </h:column>
-    </h:dataTable>
+    <ui:repeat value="#{taskBean.tasks}" var="entry">
+        <ui:fragment rendered="#{taskBean.groupByStatus}">
+        <h5>#{entry.key.value}</h5>
+        </ui:fragment>
+        <div class="table-responsive mb-4">
+            <h:dataTable value="#{entry.value}" var="task" styleClass="table table-striped table-bordered">
+                <h:column>
+                    <f:facet name="header">Task ID</f:facet>
+                    <h:outputText value="#{task.taskId}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Title</f:facet>
+                    <h:outputText value="#{task.title}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Description</f:facet>
+                    <h:outputText value="#{task.description}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Priority</f:facet>
+                    <h:outputText value="#{task.priority != null ? task.priority.level : '-'}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Status</f:facet>
+                    <h:outputText value="#{task.status != null ? task.status.value : '-'}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Due Date</f:facet>
+                    <h:outputText value="#{task.getFormattedDueDate()}"/>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Comments</f:facet>
+                    <h:form>
+                        <h:commandButton value="Comments" action="#{commentBean.loadCommentsForTask(task)}"
+                                         class="btn btn-primary">
+                            <f:ajax event="action" execute="@form" render="@all" onevent="openCommentModal"/>
+                        </h:commandButton>
+                    </h:form>
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Edit</f:facet>
+                    <h:form>
+                        <h:commandButton value="Edit" action="#{taskBean.prepareForEdit(task)}"
+                                         class="btn btn-primary">
+                            <f:ajax event="action" execute="@form" render="@all" onevent="openTaskModal"/>
+                        </h:commandButton>
+                    </h:form>
+                </h:column>
+            </h:dataTable>
+        </div>
+    </ui:repeat>
 </div>
 <c:choose>
     <c:when test="#{taskBean.currentlySelectedList != null}">

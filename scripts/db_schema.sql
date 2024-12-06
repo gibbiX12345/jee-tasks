@@ -26,13 +26,15 @@ CREATE TABLE "task_list"
 CREATE TABLE "status"
 (
     status_id    SERIAL PRIMARY KEY,
-    status_value VARCHAR(50) NOT NULL
+    status_value VARCHAR(50) NOT NULL,
+    status_order INTEGER NOT NULL
 );
 
 CREATE TABLE "priority"
 (
     priority_id    SERIAL PRIMARY KEY,
-    priority_level VARCHAR(50) NOT NULL
+    priority_level VARCHAR(50) NOT NULL,
+    priority_order INTEGER NOT NULL
 );
 
 CREATE TABLE "task"
@@ -58,16 +60,16 @@ CREATE TABLE "comment"
 
 
 
-INSERT INTO public.priority (priority_id, priority_level) VALUES (DEFAULT, 'Urgent');
-INSERT INTO public.priority (priority_id, priority_level) VALUES (DEFAULT, 'High');
-INSERT INTO public.priority (priority_id, priority_level) VALUES (DEFAULT, 'Normal');
-INSERT INTO public.priority (priority_id, priority_level) VALUES (DEFAULT, 'Low');
+INSERT INTO public.priority (priority_id, priority_level, priority_order) VALUES (DEFAULT, 'Urgent', 1);
+INSERT INTO public.priority (priority_id, priority_level, priority_order) VALUES (DEFAULT, 'High', 2);
+INSERT INTO public.priority (priority_id, priority_level, priority_order) VALUES (DEFAULT, 'Normal', 3);
+INSERT INTO public.priority (priority_id, priority_level, priority_order) VALUES (DEFAULT, 'Low', 4);
 
 
-INSERT INTO public.status (status_id, status_value) VALUES (DEFAULT, 'New');
-INSERT INTO public.status (status_id, status_value) VALUES (DEFAULT, 'Confirmed');
-INSERT INTO public.status (status_id, status_value) VALUES (DEFAULT, 'Planned');
-INSERT INTO public.status (status_id, status_value) VALUES (DEFAULT, 'In Progress');
-INSERT INTO public.status (status_id, status_value) VALUES (DEFAULT, 'Verification');
-INSERT INTO public.status (status_id, status_value) VALUES (DEFAULT, 'Completed');
-INSERT INTO public.status (status_id, status_value) VALUES (DEFAULT, 'On Hold');
+INSERT INTO public.status (status_id, status_value, status_order) VALUES (DEFAULT, 'New', 1);
+INSERT INTO public.status (status_id, status_value, status_order) VALUES (DEFAULT, 'Confirmed', 2);
+INSERT INTO public.status (status_id, status_value, status_order) VALUES (DEFAULT, 'Planned', 3);
+INSERT INTO public.status (status_id, status_value, status_order) VALUES (DEFAULT, 'In Progress', 4);
+INSERT INTO public.status (status_id, status_value, status_order) VALUES (DEFAULT, 'Verification', 5);
+INSERT INTO public.status (status_id, status_value, status_order) VALUES (DEFAULT, 'Completed', 6);
+INSERT INTO public.status (status_id, status_value, status_order) VALUES (DEFAULT, 'On Hold', 7);

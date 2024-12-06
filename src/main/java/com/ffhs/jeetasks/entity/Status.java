@@ -15,4 +15,7 @@ public class Status {
 
     @Column(name = "status_value", nullable = false)
     private String value;
+
+    @Column(name = "status_order", nullable = false)
+    private Integer order;
 }
