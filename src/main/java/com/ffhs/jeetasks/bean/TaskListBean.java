@@ -22,11 +22,8 @@ public class TaskListBean implements Serializable {
     private LoginBean loginBean;
 
     private TaskList taskListEdit;
-    private String editTaskListTitle;
-    private String editTaskListDescription;
-
-    private String newTaskListTitle;
-    private String newTaskListDescription;
+    private String taskListTitle;
+    private String taskListDescription;
 
     public List<TaskList> getTaskLists() {
         return taskListService.findAllTaskListsForUser();
@@ -35,25 +32,35 @@ public class TaskListBean implements Serializable {
     public void prepareForEdit(TaskList taskList) {
         taskListEdit = taskList;
         if (taskList != null) {
-            editTaskListTitle = taskList.getTitle();
-            editTaskListDescription = taskList.getDescription();
+            taskListTitle = taskList.getTitle();
+            taskListDescription = taskList.getDescription();
+        } else {
+            taskListTitle = "";
+            taskListDescription = "";
         }
     }
 
     public void addTaskList() {
         TaskList taskList = new TaskList();
-        taskList.setTitle(newTaskListTitle);
-        taskList.setDescription(newTaskListDescription);
+        setTaskListData(taskList);
         taskList.setUser(loginBean.getUser());
         taskList.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         taskListService.insertModel(taskList);
-        newTaskListTitle = "";
-        newTaskListDescription = "";
+        taskListTitle = "";
+        taskListDescription = "";
     }
 
     public void saveTaskList() {
-        taskListEdit.setTitle(editTaskListTitle);
-        taskListEdit.setDescription(editTaskListDescription);
+        if (taskListEdit == null) {
+            addTaskList();
+            return;
+        }
+        setTaskListData(taskListEdit);
         taskListService.updateModel(taskListEdit);
+    }
+
+    private void setTaskListData(TaskList taskList) {
+        taskList.setTitle(taskListTitle);
+        taskList.setDescription(taskListDescription);
     }
 }

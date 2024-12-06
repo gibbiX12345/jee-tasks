@@ -10,10 +10,12 @@
      style="white-space: pre-wrap">#{taskBean.currentlySelectedList != null ? taskBean.currentlySelectedList.description : ''}</div>
 <c:choose>
     <c:when test="#{taskBean.currentlySelectedList != null}">
-        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
-                data-bs-target="#editTaskListModal">
-            Edit List
-        </button>
+        <h:form>
+            <h:commandButton value="Edit List" action="#{taskListBean.prepareForEdit(taskBean.currentlySelectedList)}"
+                             class="btn btn-primary mb-3">
+                <f:ajax event="action" execute="@form" render="@all" onevent="openTaskListModal"/>
+            </h:commandButton>
+        </h:form>
     </c:when>
 </c:choose>
 <div class="table-responsive">
@@ -47,7 +49,7 @@
             <h:form>
                 <h:commandButton value="Edit" action="#{taskBean.prepareForEdit(task)}"
                                  class="btn btn-primary">
-                    <f:ajax event="action" execute="@form" render="@all" onevent="openModal"/>
+                    <f:ajax event="action" execute="@form" render="@all" onevent="openTaskModal"/>
                 </h:commandButton>
             </h:form>
         </h:column>
@@ -58,22 +60,11 @@
         <h:form>
             <h:commandButton value="Create New Task" action="#{taskBean.prepareForEdit(null)}"
                              class="btn btn-primary">
-                <f:ajax event="action" execute="@form" render="@all" onevent="openModal"/>
+                <f:ajax event="action" execute="@form" render="@all" onevent="openTaskModal"/>
             </h:commandButton>
         </h:form>
     </c:when>
 </c:choose>
-<ui:include src="forms/edit_task_list_modal.xhtml"/>
+<ui:include src="forms/task_list_edit_mask.xhtml"/>
 <ui:include src="forms/task_edit_mask.xhtml"/>
-
-
-<script type="text/javascript">
-    function openModal(data) {
-        if (data.status === "success") {
-            // Open the modal after the AJAX call is successful
-            const modal = new bootstrap.Modal(document.getElementById('taskEditMaskModal'));
-            modal.show();
-        }
-    }
-</script>
 </html>

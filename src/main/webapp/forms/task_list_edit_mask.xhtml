@@ -1,25 +1,33 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
-<div class="modal fade" id="editTaskListModal" tabindex="-1" aria-labelledby="editTaskListModalLabel"
+      xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:c="http://java.sun.com/jsp/jstl/core">
+<div class="modal fade" id="taskListEditMaskModal" tabindex="-1" aria-labelledby="taskListEditMaskModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="editTaskListModalLabel">
-                    Edit #{taskListBean.taskListEdit.title}</h5>
+                <h5 class="modal-title" id="taskListEditMaskModalLabel">
+                <c:choose>
+                    <c:when test="#{taskListBean.taskListEdit != null}">
+                        Edit #{taskListBean.taskListEdit.title}
+                    </c:when>
+                    <c:otherwise>
+                        Create New List
+                    </c:otherwise>
+                </c:choose>
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
             </div>
             <h:form>
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="taskListName" class="form-label">List Name</label>
-                        <h:inputText id="taskListName" value="#{taskListBean.editTaskListTitle}"
+                        <h:inputText id="taskListName" value="#{taskListBean.taskListTitle}"
                                      class="form-control" required="true"/>
                     </div>
                     <div class="mb-3">
                         <label for="taskListDescription" class="form-label">Description</label>
-                        <h:inputText id="taskListDescription" value="#{taskListBean.editTaskListDescription}"
+                        <h:inputText id="taskListDescription" value="#{taskListBean.taskListDescription}"
                                      class="form-control" required="false"/>
                     </div>
                 </div>
