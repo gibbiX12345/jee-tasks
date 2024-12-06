@@ -73,3 +73,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+
+window.addEventListener('load', function () {
+    const urlParams = new URLSearchParams(window.location.search);
+    const taskId = urlParams.get('taskId');
+    if (taskId) {
+        const hiddenForm = document.getElementById('hiddenTaskForm');
+        if (hiddenForm) {
+            const hiddenButton = document.getElementById('hiddenTaskForm:prepareForEditButton');
+            if (hiddenButton) {
+                // Add the taskId parameter dynamically
+                hiddenButton.form.action += `?taskId=${taskId}`;
+                // Trigger the button click programmatically to load the task details
+                hiddenButton.click();
+            }
+        }
+    }
+});

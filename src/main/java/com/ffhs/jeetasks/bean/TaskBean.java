@@ -3,13 +3,13 @@ package com.ffhs.jeetasks.bean;
 import com.ffhs.jeetasks.entity.Status;
 import com.ffhs.jeetasks.entity.Task;
 import com.ffhs.jeetasks.entity.TaskList;
-import com.ffhs.jeetasks.service.PriorityService;
-import com.ffhs.jeetasks.service.StatusService;
-import com.ffhs.jeetasks.service.TaskService;
-import com.ffhs.jeetasks.service.UserService;
+import com.ffhs.jeetasks.service.*;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.application.ResourceDependency;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @Data
 @Named
 @SessionScoped
+@ResourceDependency(name = "jsf.js", library = "javax.faces", target = "head")
 public class TaskBean implements Serializable {
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
@@ -37,6 +38,10 @@ public class TaskBean implements Serializable {
     private StatusService statusService;
     @Inject
     private UserService userService;
+    @Inject
+    private NotificationService notificationService;
+    @Inject
+    private LoginBean loginBean;
 
     private TaskList currentlySelectedList;
     private TECHNICAL_LIST_TYPE currentlySelectedListType = TECHNICAL_LIST_TYPE.ALL_TASKS;
@@ -93,6 +98,12 @@ public class TaskBean implements Serializable {
         this.currentlySelectedListType = type;
     }
 
+    public void prepareForEditByTaskId() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        String taskIdParam = context.getExternalContext().getRequestParameterMap().get("taskId");
+        prepareForEdit(taskService.findTaskById(Long.parseLong(taskIdParam)));
+    }
+
     public void prepareForEdit(Task task) {
         taskEdit = task;
         if (task != null) {
@@ -117,6 +128,7 @@ public class TaskBean implements Serializable {
         setTaskData(task);
         task.setTaskList(currentlySelectedList);
         taskService.insertModel(task);
+        createNotifications(task);
         taskTitle = "";
         taskDescription = "";
     }
@@ -126,6 +138,7 @@ public class TaskBean implements Serializable {
             addTask();
             return;
         }
+        createNotifications(taskEdit);
         setTaskData(taskEdit);
         taskService.updateModel(taskEdit);
     }
@@ -153,6 +166,29 @@ public class TaskBean implements Serializable {
             task.setStatus(statusService.findStatusById(taskStatusId));
         }
         task.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+    }
+
+    private void createNotifications(Task task) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
+
+        StringBuilder url = new StringBuilder();
+        url.append(request.getScheme())
+                .append("://")
+                .append(request.getServerName())
+                .append(":")
+                .append(request.getServerPort())
+                .append(request.getContextPath())
+                .append(request.getServletPath())
+                .append("?taskId=").append(task.getTaskId());
+
+        if (taskAssigendUserId != null && (task.getAssignedUser() == null || !task.getAssignedUser().getUserId().equals(taskAssigendUserId))) {
+            if (!taskAssigendUserId.equals(loginBean.getUser().getUserId())) {
+                String notificationText = "Task '" + taskTitle + "' was assigned to you by user " + loginBean.getUser().getEmail();
+                notificationService.createNotification(notificationText, userService.findUserById(taskAssigendUserId), url.toString());
+            }
+        }
+
     }
 
     public void toggleGroupByStatus() {

@@ -118,6 +118,11 @@
         </h:form>
     </c:when>
 </c:choose>
+<h:form id="hiddenTaskForm">
+    <h:commandButton id="prepareForEditButton" action="#{taskBean.prepareForEditByTaskId}" style="display:none">
+        <f:ajax execute="@this" render="@all" onevent="openTaskModal"/>
+    </h:commandButton>
+</h:form>
 <ui:include src="forms/task_list_edit_mask.xhtml"/>
 <ui:include src="forms/task_edit_mask.xhtml"/>
 <ui:include src="forms/comments.xhtml"/>

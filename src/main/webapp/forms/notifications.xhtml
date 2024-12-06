@@ -19,9 +19,9 @@
                 <ui:repeat value="#{notificationBean.openNotifications}" var="notification">
                     <div class="notification-item mb-2">
                         <p><strong>#{notification.text}</strong></p>
-                        <c:if test="#{notification.link != null}">
+                        <ui:fragment rendered="#{notification.link != null}">
                             <a href="#{notification.link}" class="btn btn-link">View</a>
-                        </c:if>
+                        </ui:fragment>
                         <h:commandButton value="Dismiss" action="#{notificationBean.dismissNotification(notification)}"
                                          class="btn btn-sm btn-outline-secondary">
                             <f:ajax execute="@form" render="@all" onevent="onNotificationDismissCompleted"/>

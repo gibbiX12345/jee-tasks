@@ -2,6 +2,7 @@ package com.ffhs.jeetasks.service;
 
 import com.ffhs.jeetasks.bean.LoginBean;
 import com.ffhs.jeetasks.bean.TaskBean;
+import com.ffhs.jeetasks.entity.Status;
 import com.ffhs.jeetasks.entity.Task;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -20,6 +21,12 @@ public class TaskService implements Serializable {
 
     @Inject
     private LoginBean loginBean;
+
+    public Task findTaskById(Long taskId) {
+        return entityManager.createQuery("SELECT t FROM Task t WHERE t.taskId = :taskId", Task.class)
+                .setParameter("taskId", taskId)
+                .getSingleResult();
+    }
 
     public List<Task> findAllTasksByListId(Long listId, String sortColumn, boolean ascending, TaskBean.TECHNICAL_LIST_TYPE type) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
