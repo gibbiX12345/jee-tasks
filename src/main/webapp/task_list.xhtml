@@ -45,6 +45,15 @@
             <h:outputText value="#{task.getFormattedDueDate()}"/>
         </h:column>
         <h:column>
+            <f:facet name="header">Comments</f:facet>
+            <h:form>
+                <h:commandButton value="Comments" action="#{commentBean.loadCommentsForTask(task)}"
+                                 class="btn btn-primary">
+                    <f:ajax event="action" execute="@form" render="@all" onevent="openCommentModal"/>
+                </h:commandButton>
+            </h:form>
+        </h:column>
+        <h:column>
             <f:facet name="header">Edit</f:facet>
             <h:form>
                 <h:commandButton value="Edit" action="#{taskBean.prepareForEdit(task)}"
@@ -67,4 +76,5 @@
 </c:choose>
 <ui:include src="forms/task_list_edit_mask.xhtml"/>
 <ui:include src="forms/task_edit_mask.xhtml"/>
+<ui:include src="forms/comments.xhtml"/>
 </html>

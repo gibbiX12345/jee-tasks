@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 @Data
 @Entity
@@ -28,4 +29,13 @@ public class Comment {
 
     @Column(name = "comment_created_at")
     private Timestamp createdAt;
+
+
+    public String getFormattedCreatedAt() {
+        if (createdAt == null) {
+            return "-";
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        return formatter.format(createdAt);
+    }
 }
