@@ -31,8 +31,16 @@
             <h:outputText value="#{task.description}"/>
         </h:column>
         <h:column>
+            <f:facet name="header">Priority</f:facet>
+            <h:outputText value="#{task.priority != null ? task.priority.level : '-'}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Status</f:facet>
+            <h:outputText value="#{task.status != null ? task.status.value : '-'}"/>
+        </h:column>
+        <h:column>
             <f:facet name="header">Due Date</f:facet>
-            <h:outputText value="#{task.dueDate}"/>
+            <h:outputText value="#{task.getFormattedDueDate()}"/>
         </h:column>
         <h:column>
             <f:facet name="header">Edit</f:facet>
@@ -45,10 +53,14 @@
         </h:column>
     </h:dataTable>
 </div>
-<button type="button" class="btn btn-primary" data-bs-toggle="modal"
-        data-bs-target="#addTaskModal">
-    Create New Task
-</button>
+<c:choose>
+    <c:when test="#{taskBean.currentlySelectedList != null}">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#addTaskModal">
+            Create New Task
+        </button>
+    </c:when>
+</c:choose>
 <ui:include src="forms/edit_task_list_modal.xhtml"/>
 <ui:include src="forms/add_task_modal.xhtml"/>
 

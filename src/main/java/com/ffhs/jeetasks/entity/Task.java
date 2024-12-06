@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 @Data
 @Entity
@@ -38,4 +39,12 @@ public class Task {
 
     @Column(name = "task_created_at")
     private Timestamp createdAt;
+
+    public String getFormattedDueDate() {
+        if (dueDate == null) {
+            return "-";
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        return formatter.format(dueDate);
+    }
 }

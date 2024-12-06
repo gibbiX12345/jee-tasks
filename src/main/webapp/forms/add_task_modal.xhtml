@@ -45,6 +45,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <h:commandButton value="Delete" action="#{taskBean.deleteTask}"
+                                     class="btn btn-danger"/>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <h:commandButton value="Save" action="#{taskBean.saveTask}"
                                      class="btn btn-primary"/>

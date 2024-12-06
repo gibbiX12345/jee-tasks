@@ -28,7 +28,7 @@ public class TaskService implements Serializable {
     public List<Task> findAllTasksForUser() {
         if (loginBean.getUser() == null) return new ArrayList<>();
         Long userId = loginBean.getUser().getUserId();
-        return entityManager.createQuery("SELECT t FROM Task t WHERE t.taskList.user.userId = :userId", Task.class)
+        return entityManager.createQuery("SELECT t FROM Task t WHERE t.taskList.user.userId = :userId ORDER BY t.taskId", Task.class)
                 .setParameter("userId", userId)
                 .getResultList();
     }
@@ -37,16 +37,20 @@ public class TaskService implements Serializable {
         if (listId == null) {
             return findAllTasksForUser();
         }
-        return entityManager.createQuery("SELECT t FROM Task t WHERE t.taskList.listId = :listId", Task.class)
+        return entityManager.createQuery("SELECT t FROM Task t WHERE t.taskList.listId = :listId ORDER BY t.taskId", Task.class)
                 .setParameter("listId", listId)
                 .getResultList();
     }
 
-    public void insertModel(Task taskList) {
-        entityManager.persist(taskList);
+    public void insertModel(Task task) {
+        entityManager.persist(task);
     }
 
-    public void updateModel(Task taskList) {
-        entityManager.merge(taskList);
+    public void updateModel(Task task) {
+        entityManager.merge(task);
+    }
+
+    public void deleteModel(Task task) {
+        entityManager.remove(entityManager.merge(task));
     }
 }

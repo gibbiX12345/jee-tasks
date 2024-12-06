@@ -84,6 +84,12 @@ public class TaskBean implements Serializable {
         taskService.updateModel(taskEdit);
     }
 
+    public void deleteTask() {
+        if (taskEdit != null) {
+            taskService.deleteModel(taskEdit);
+        }
+    }
+
     private void setTaskData(Task task) {
         task.setTitle(newTaskTitle);
         task.setDescription(newTaskDescription);
