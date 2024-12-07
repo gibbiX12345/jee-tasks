@@ -3,10 +3,13 @@ package com.ffhs.jeetasks.bean;
 import com.ffhs.jeetasks.entity.User;
 import com.ffhs.jeetasks.service.UserService;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 
@@ -22,7 +25,10 @@ public class LoginBean implements Serializable {
     @Inject
     private UserService userService;
 
+    @NotEmpty(message = "Email is required")
+    @Email(message = "Invalid email address")
     private String email;
+    @NotEmpty(message = "Password is required")
     private String password;
     private User user;
 
@@ -33,7 +39,8 @@ public class LoginBean implements Serializable {
             this.user = user.get();
             return "/index?faces-redirect=true";
         } else {
-            return "/login?faces-redirect=true";
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login unsuccessful", "Invalid email or password"));
+            return null;
         }
     }
 

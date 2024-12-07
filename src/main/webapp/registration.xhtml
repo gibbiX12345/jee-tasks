@@ -13,11 +13,13 @@
                 <h:form>
                     <div class="form-group">
                         <label for="email">Email:</label>
-                        <h:inputText id="email" value="#{registrationBean.email}" required="true" class="form-control" />
+                        <h:inputText id="email" value="#{registrationBean.email}" class="form-control" />
+                        <h:message for="email" style="color: red;" />
                     </div>
                     <div class="form-group">
                         <label for="password">Password:</label>
-                        <h:inputSecret id="password" value="#{registrationBean.password}" required="true" class="form-control" />
+                        <h:inputSecret id="password" value="#{registrationBean.password}" class="form-control" />
+                        <h:message for="password" style="color: red;" />
                     </div>
                     <div class="text-center">
                         <h:commandButton value="Register" action="#{registrationBean.registerUser}" class="btn btn-primary"/>
