@@ -1,4 +1,4 @@
-package com.ffhs.jeetasks.bean;
+package com.ffhs.jeetasks.bean.user;
 
 import com.ffhs.jeetasks.util.SessionUtils;
 import jakarta.enterprise.context.SessionScoped;

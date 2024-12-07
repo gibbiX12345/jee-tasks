@@ -1,6 +1,6 @@
 package com.ffhs.jeetasks.service;
 
-import com.ffhs.jeetasks.bean.TaskBean;
+import com.ffhs.jeetasks.bean.task.TaskBean;
 import com.ffhs.jeetasks.dto.TaskFormDTO;
 import com.ffhs.jeetasks.entity.*;
 import jakarta.ejb.Stateless;

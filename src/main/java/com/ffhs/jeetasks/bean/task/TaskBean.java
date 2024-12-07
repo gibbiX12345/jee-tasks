@@ -1,5 +1,6 @@
-package com.ffhs.jeetasks.bean;
+package com.ffhs.jeetasks.bean.task;
 
+import com.ffhs.jeetasks.bean.PushBean;
 import com.ffhs.jeetasks.dto.TaskFormDTO;
 import com.ffhs.jeetasks.entity.Status;
 import com.ffhs.jeetasks.entity.Task;

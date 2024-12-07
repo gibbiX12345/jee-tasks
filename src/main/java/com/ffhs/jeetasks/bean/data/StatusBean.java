@@ -1,4 +1,4 @@
-package com.ffhs.jeetasks.bean;
+package com.ffhs.jeetasks.bean.data;
 
 import com.ffhs.jeetasks.entity.Status;
 import com.ffhs.jeetasks.service.StatusService;

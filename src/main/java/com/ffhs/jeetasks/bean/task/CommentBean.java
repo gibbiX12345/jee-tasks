@@ -1,12 +1,10 @@
-package com.ffhs.jeetasks.bean;
+package com.ffhs.jeetasks.bean.task;
 
 import com.ffhs.jeetasks.entity.Comment;
 import com.ffhs.jeetasks.entity.Task;
 import com.ffhs.jeetasks.service.CommentService;
 import com.ffhs.jeetasks.util.SessionUtils;
 import jakarta.enterprise.context.SessionScoped;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.Getter;

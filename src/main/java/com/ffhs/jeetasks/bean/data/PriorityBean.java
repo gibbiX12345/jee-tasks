@@ -1,4 +1,4 @@
-package com.ffhs.jeetasks.bean;
+package com.ffhs.jeetasks.bean.data;
 
 import com.ffhs.jeetasks.entity.Priority;
 import com.ffhs.jeetasks.service.PriorityService;

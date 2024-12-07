@@ -1,4 +1,4 @@
-package com.ffhs.jeetasks.bean;
+package com.ffhs.jeetasks.bean.task;
 
 import com.ffhs.jeetasks.entity.TaskList;
 import com.ffhs.jeetasks.service.TaskListService;

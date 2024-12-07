@@ -1,12 +1,10 @@
-package com.ffhs.jeetasks.bean;
+package com.ffhs.jeetasks.bean.task;
 
 import com.ffhs.jeetasks.entity.Notification;
 import com.ffhs.jeetasks.service.NotificationService;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
