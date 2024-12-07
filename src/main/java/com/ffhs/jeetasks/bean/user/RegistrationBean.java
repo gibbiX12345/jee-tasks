@@ -1,14 +1,11 @@
 package com.ffhs.jeetasks.bean.user;
 
-import com.ffhs.jeetasks.dto.LoginFormDTO;
 import com.ffhs.jeetasks.dto.RegistrationFormDTO;
 import com.ffhs.jeetasks.entity.User;
 import com.ffhs.jeetasks.service.UserService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,6 +33,18 @@ public class RegistrationBean {
      * @return Navigation string to redirect to the login page after successful registration.
      */
     public String registerUser() {
+        if (registrationForm.getEmail() == null) {
+            throw new IllegalArgumentException("Email cannot be null");
+        }
+        if (registrationForm.getEmail().isEmpty()) {
+            throw new IllegalArgumentException("Email cannot be empty");
+        }
+        if (registrationForm.getPassword() == null) {
+            throw new IllegalArgumentException("Password cannot be null");
+        }
+        if (registrationForm.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be empty");
+        }
         User user = new User();
         user.setEmail(registrationForm.getEmail());
         user.setPasswordHash(BCrypt.hashpw(registrationForm.getPassword(), BCrypt.gensalt()));

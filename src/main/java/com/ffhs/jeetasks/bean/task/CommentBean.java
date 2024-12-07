@@ -68,7 +68,7 @@ public class CommentBean implements Serializable {
      * @param content The content of the comment.
      * @return A new Comment entity.
      */
-    private Comment createComment(String content) {
+    Comment createComment(String content) {
         Comment comment = new Comment();
         comment.setContent(content);
         comment.setTask(currentTask);

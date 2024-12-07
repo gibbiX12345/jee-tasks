@@ -55,8 +55,8 @@ public class TaskBean implements Serializable {
     @Getter
     private boolean groupByStatus = false;
 
-    private String sortColumn = "taskId";
-    private boolean ascending = true;
+    String sortColumn = "taskId";
+    boolean ascending = true;
 
     public enum TECHNICAL_LIST_TYPE {CUSTOM_LIST, ALL_TASKS, MY_ASSIGNED_TASKS}
 

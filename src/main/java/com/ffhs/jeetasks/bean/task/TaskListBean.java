@@ -30,6 +30,7 @@ public class TaskListBean implements Serializable {
     private TaskList taskListEdit;
 
     @Getter
+    @Setter
     private TaskListFormDTO taskListForm = new TaskListFormDTO();
 
     /**
@@ -77,7 +78,7 @@ public class TaskListBean implements Serializable {
      *
      * @return True if valid, false otherwise.
      */
-    private boolean isValid() {
+    boolean isValid() {
         if (taskListForm.getTitle() == null || taskListForm.getTitle().isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Save unsuccessful", "List Name can't be empty"));
