@@ -8,20 +8,27 @@ import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import jakarta.validation.constraints.NotEmpty;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Data
 @Named
 @SessionScoped
 public class CommentBean implements Serializable {
 
+    @Getter
+    @Setter
     private List<Comment> commentsForTask;
+
+    @Getter
+    @Setter
     private Task currentTask;
+
+    @Getter
+    @Setter
     private String newCommentContent;
 
     @Inject
@@ -30,26 +37,47 @@ public class CommentBean implements Serializable {
     @Inject
     private LoginBean loginBean;
 
+    /**
+     * Loads comments for a specific task and sets it as the current task.
+     *
+     * @param task The task whose comments are to be loaded.
+     */
     public void loadCommentsForTask(Task task) {
-        this.currentTask = task;
-        commentsForTask = commentService.findAllCommentsByTaskId(currentTask.getTaskId());
-    }
-
-    public List<Comment> getComments() {
-        return commentService.findAllComments();
-    }
-
-    public void addComment() {
-        if (newCommentContent != null && !newCommentContent.isEmpty()) {
-            Comment newComment = new Comment();
-            newComment.setContent(newCommentContent);
-            newComment.setTask(currentTask);
-            newComment.setUser(loginBean.getUser());
-            newComment.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-            commentService.insertModel(newComment);
-
-            loadCommentsForTask(currentTask);
-            newCommentContent = "";
+        if (task == null) {
+            throw new IllegalArgumentException("Task cannot be null");
         }
+        this.currentTask = task;
+        this.commentsForTask = commentService.findAllCommentsByTaskId(task.getTaskId());
+    }
+
+    /**
+     * Adds a new comment to the current task if the content is not empty.
+     * Updates the comments list after insertion.
+     */
+    public void addComment() {
+        if (newCommentContent == null || newCommentContent.trim().isEmpty()) {
+            return;
+        }
+
+        Comment newComment = createComment(newCommentContent);
+        commentService.insertModel(newComment);
+
+        loadCommentsForTask(currentTask);
+        newCommentContent = "";
+    }
+
+    /**
+     * Creates a new Comment entity with the given content.
+     *
+     * @param content The content of the comment.
+     * @return A new Comment entity.
+     */
+    private Comment createComment(String content) {
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setTask(currentTask);
+        comment.setUser(loginBean.getUser());
+        comment.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        return comment;
     }
 }
