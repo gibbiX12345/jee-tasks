@@ -2,6 +2,7 @@ package com.ffhs.jeetasks.bean;
 
 import com.ffhs.jeetasks.entity.TaskList;
 import com.ffhs.jeetasks.service.TaskListService;
+import com.ffhs.jeetasks.util.SessionUtils;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -21,8 +22,6 @@ public class TaskListBean implements Serializable {
 
     @Inject
     private TaskListService taskListService;
-    @Inject
-    private LoginBean loginBean;
 
     private TaskList taskListEdit;
     private String taskListTitle;
@@ -46,7 +45,7 @@ public class TaskListBean implements Serializable {
     public void addTaskList() {
         TaskList taskList = new TaskList();
         setTaskListData(taskList);
-        taskList.setUser(loginBean.getUser());
+        taskList.setUser(SessionUtils.getLoggedInUser());
         taskList.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         taskListService.insertModel(taskList);
         taskListTitle = "";

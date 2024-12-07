@@ -17,7 +17,7 @@
                    onclick="triggerNotificationButtonAction()"/>
                 <h:outputText class="me-4" value="#{notificationBean.openNotifications.size()}"/>
                 <i class="fas fa-user me-2"/>
-                <h:outputText value="#{loginBean.email}"/>
+                <h:outputText value="#{userContextBean.email}"/>
             </span>
             <h:form>
                 <h:commandButton id="notificationButton" action="#{notificationBean.loadOpenNotifications}"

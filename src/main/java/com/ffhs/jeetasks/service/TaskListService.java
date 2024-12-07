@@ -1,9 +1,8 @@
 package com.ffhs.jeetasks.service;
 
-import com.ffhs.jeetasks.bean.LoginBean;
 import com.ffhs.jeetasks.entity.TaskList;
+import com.ffhs.jeetasks.util.SessionUtils;
 import jakarta.ejb.Stateless;
-import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -16,16 +15,14 @@ public class TaskListService implements Serializable {
 
     @PersistenceContext(unitName = "jee-tasks-pu")
     private EntityManager entityManager;
-    @Inject
-    private LoginBean loginBean;
 
     public List<TaskList> findAllTaskLists() {
         return entityManager.createQuery("SELECT l FROM TaskList l", TaskList.class).getResultList();
     }
 
     public List<TaskList> findAllTaskListsForUser() {
-        if (loginBean.getUser() == null) return new ArrayList<>();
-        Long userId = loginBean.getUser().getUserId();
+        if (!SessionUtils.isLoggedIn()) return new ArrayList<>();
+        Long userId = SessionUtils.getLoggedInUser().getUserId();
         return entityManager.createQuery("SELECT l FROM TaskList l WHERE l.user.userId = :userId ORDER BY l.createdAt", TaskList.class)
                 .setParameter("userId", userId)
                 .getResultList();

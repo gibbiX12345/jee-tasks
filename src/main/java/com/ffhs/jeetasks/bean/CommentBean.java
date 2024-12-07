@@ -3,6 +3,7 @@ package com.ffhs.jeetasks.bean;
 import com.ffhs.jeetasks.entity.Comment;
 import com.ffhs.jeetasks.entity.Task;
 import com.ffhs.jeetasks.service.CommentService;
+import com.ffhs.jeetasks.util.SessionUtils;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -33,9 +34,6 @@ public class CommentBean implements Serializable {
 
     @Inject
     private CommentService commentService;
-
-    @Inject
-    private LoginBean loginBean;
 
     /**
      * Loads comments for a specific task and sets it as the current task.
@@ -76,7 +74,7 @@ public class CommentBean implements Serializable {
         Comment comment = new Comment();
         comment.setContent(content);
         comment.setTask(currentTask);
-        comment.setUser(loginBean.getUser());
+        comment.setUser(SessionUtils.getLoggedInUser());
         comment.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         return comment;
     }

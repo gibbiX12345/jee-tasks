@@ -7,6 +7,7 @@ import com.ffhs.jeetasks.entity.TaskList;
 import com.ffhs.jeetasks.service.NotificationService;
 import com.ffhs.jeetasks.service.TaskService;
 import com.ffhs.jeetasks.service.UserService;
+import com.ffhs.jeetasks.util.SessionUtils;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
@@ -38,9 +39,6 @@ public class TaskBean implements Serializable {
     @Inject
     private PushBean pushBean;
 
-    @Inject
-    private LoginBean loginBean;
-
     @Getter
     private TaskList currentlySelectedList;
 
@@ -69,7 +67,7 @@ public class TaskBean implements Serializable {
     public Map<Status, List<Task>> getTasks() {
         List<Task> tasks = taskService.findAllTasksByListId(
                 currentlySelectedList != null ? currentlySelectedList.getListId() : null,
-                sortColumn, ascending, currentlySelectedListType, loginBean.getUser().getUserId()
+                sortColumn, ascending, currentlySelectedListType, SessionUtils.getLoggedInUser().getUserId()
         );
 
         return groupByStatus
@@ -178,7 +176,7 @@ public class TaskBean implements Serializable {
      */
     private boolean isNotSelfAssignment() {
         return taskForm.getAssignedUserId() != null &&
-                !taskForm.getAssignedUserId().equals(loginBean.getUser().getUserId());
+                !taskForm.getAssignedUserId().equals(SessionUtils.getLoggedInUser().getUserId());
     }
 
     /**
@@ -192,8 +190,8 @@ public class TaskBean implements Serializable {
     private void sendNotificationIfNeeded(Task task, boolean isAssigneeChanged, boolean isNotSelfAssignment, boolean isNew) {
         if (isAssigneeChanged && isNotSelfAssignment) {
             String notificationText = isNew
-                    ? "Task '" + task.getTitle() + "' was assigned to you by user " + loginBean.getUser().getEmail()
-                    : "Task '" + task.getTitle() + "' was reassigned to you by user " + loginBean.getUser().getEmail();
+                    ? "Task '" + task.getTitle() + "' was assigned to you by user " + SessionUtils.getLoggedInUser().getEmail()
+                    : "Task '" + task.getTitle() + "' was reassigned to you by user " + SessionUtils.getLoggedInUser().getEmail();
             String notificationLink = generateTaskLink(task);
             notificationService.createNotification(notificationText, userService.findUserById(taskForm.getAssignedUserId()), notificationLink);
             pushBean.sendPushMessage("notification updated");

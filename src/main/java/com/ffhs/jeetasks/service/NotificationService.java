@@ -1,11 +1,9 @@
 package com.ffhs.jeetasks.service;
 
-import com.ffhs.jeetasks.bean.LoginBean;
 import com.ffhs.jeetasks.entity.Notification;
-import com.ffhs.jeetasks.entity.TaskList;
 import com.ffhs.jeetasks.entity.User;
+import com.ffhs.jeetasks.util.SessionUtils;
 import jakarta.ejb.Stateless;
-import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -19,12 +17,10 @@ public class NotificationService implements Serializable {
 
     @PersistenceContext(unitName = "jee-tasks-pu")
     private EntityManager entityManager;
-    @Inject
-    private LoginBean loginBean;
 
     public List<Notification> findAllNotificationsForUserNotDismissed() {
-        if (loginBean.getUser() == null) return new ArrayList<>();
-        Long userId = loginBean.getUser().getUserId();
+        if (!SessionUtils.isLoggedIn()) return new ArrayList<>();
+        Long userId = SessionUtils.getLoggedInUser().getUserId();
         return entityManager.createQuery("SELECT n FROM Notification n " +
                         "WHERE n.user.userId = :userId AND n.dismissed = false " +
                         "ORDER BY n.createdAt", Notification.class)
