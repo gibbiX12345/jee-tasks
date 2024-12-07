@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 /**
- * DTO representing the registration form input fields.
+ * DTO representing the login form input fields.
  */
 @Data
 public class RegistrationFormDTO {

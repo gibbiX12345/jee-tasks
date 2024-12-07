@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.io.Serializable;
 
+/**
+ * DTO representing the form data for a task.
+ */
 @Data
 public class TaskFormDTO implements Serializable {
     private String title;
