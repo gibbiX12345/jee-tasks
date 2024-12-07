@@ -7,8 +7,10 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import java.io.Serializable;
-import java.util.Calendar;
 
+/**
+ * Bean responsible for managing server push notifications using WebSocket channels.
+ */
 @ApplicationScoped
 @Named
 public class PushBean implements Serializable {
@@ -17,15 +19,12 @@ public class PushBean implements Serializable {
     @Push
     private PushContext notificationPushChannel;
 
+    /**
+     * Sends a push notification message through the WebSocket channel.
+     *
+     * @param message The message to send to connected clients.
+     */
     public void sendPushMessage(String message) {
         notificationPushChannel.send(message);
-    }
-
-    public void clockAction() {
-        Calendar now = Calendar.getInstance();
-
-        String time = now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE) + ":" + now.get(Calendar.SECOND);
-
-        notificationPushChannel.send(time);
     }
 }
