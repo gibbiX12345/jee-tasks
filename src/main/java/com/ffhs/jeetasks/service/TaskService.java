@@ -15,6 +15,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Service class to handle task-related business logic and database operations.
+ */
 @Stateless
 public class TaskService implements Serializable {
 
@@ -25,6 +28,9 @@ public class TaskService implements Serializable {
 
     /**
      * Find a task by its ID.
+     *
+     * @param taskId The ID of the task.
+     * @return The task entity.
      */
     public Task findTaskById(Long taskId) {
         return entityManager.find(Task.class, taskId);
@@ -32,6 +38,13 @@ public class TaskService implements Serializable {
 
     /**
      * Find all tasks filtered by list ID, sorted, and filtered by user context.
+     *
+     * @param listId     The ID of the task list.
+     * @param sortColumn The column to sort by.
+     * @param ascending  Whether sorting is ascending.
+     * @param type       The technical list type.
+     * @param userId     The ID of the user.
+     * @return A list of tasks.
      */
     public List<Task> findAllTasksByListId(Long listId, String sortColumn, boolean ascending, TaskBean.TECHNICAL_LIST_TYPE type, Long userId) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -47,6 +60,8 @@ public class TaskService implements Serializable {
 
     /**
      * Insert a new task into the database.
+     *
+     * @param task The task entity to insert.
      */
     public void insertModel(Task task) {
         entityManager.persist(task);
@@ -54,6 +69,8 @@ public class TaskService implements Serializable {
 
     /**
      * Update an existing task in the database.
+     *
+     * @param task The task entity to update.
      */
     public void updateModel(Task task) {
         entityManager.merge(task);
@@ -61,6 +78,8 @@ public class TaskService implements Serializable {
 
     /**
      * Delete a task from the database.
+     *
+     * @param task The task entity to delete.
      */
     public void deleteModel(Task task) {
         entityManager.remove(entityManager.merge(task));
@@ -68,6 +87,9 @@ public class TaskService implements Serializable {
 
     /**
      * Group tasks by their status.
+     *
+     * @param tasks The list of tasks to group.
+     * @return A map grouping tasks by their status.
      */
     public Map<Status, List<Task>> groupTasksByStatus(List<Task> tasks) {
         return tasks.stream()
@@ -80,6 +102,10 @@ public class TaskService implements Serializable {
 
     /**
      * Group tasks with a default status for tasks without a status.
+     *
+     * @param tasks         The list of tasks to group.
+     * @param defaultStatus The default status to assign to tasks without a status.
+     * @return A map grouping tasks by their status or the default status.
      */
     public Map<Status, List<Task>> groupTasksWithDefaultStatus(List<Task> tasks, Status defaultStatus) {
         return tasks.stream()
@@ -92,6 +118,8 @@ public class TaskService implements Serializable {
 
     /**
      * Get a default status instance for grouping.
+     *
+     * @return A default status entity.
      */
     public Status getDefaultStatus() {
         Status defaultStatus = new Status();
@@ -102,6 +130,9 @@ public class TaskService implements Serializable {
 
     /**
      * Convert a Task entity to a TaskFormDTO.
+     *
+     * @param task The task entity to convert.
+     * @return A TaskFormDTO representing the task.
      */
     public TaskFormDTO toFormDTO(Task task) {
         TaskFormDTO dto = new TaskFormDTO();
@@ -116,6 +147,9 @@ public class TaskService implements Serializable {
 
     /**
      * Update an existing Task entity with data from a TaskFormDTO.
+     *
+     * @param task The task entity to update.
+     * @param dto  The TaskFormDTO containing updated data.
      */
     public void updateTaskFromDTO(Task task, TaskFormDTO dto) {
         task.setTitle(dto.getTitle());
@@ -161,6 +195,13 @@ public class TaskService implements Serializable {
 
     /**
      * Build filters for query based on list ID, user ID, and list type.
+     *
+     * @param cb     The CriteriaBuilder for constructing predicates.
+     * @param task   The root task entity.
+     * @param listId The ID of the task list.
+     * @param userId The ID of the user.
+     * @param type   The technical list type.
+     * @return A Predicate representing the filters.
      */
     private Predicate buildFilters(CriteriaBuilder cb, Root<Task> task, Long listId, Long userId, TaskBean.TECHNICAL_LIST_TYPE type) {
         Predicate listIdPredicate = listId != null ? cb.equal(task.get("taskList").get("listId"), listId) : cb.conjunction();
@@ -181,6 +222,12 @@ public class TaskService implements Serializable {
 
     /**
      * Build sorting for query based on the column and order direction.
+     *
+     * @param cb         The CriteriaBuilder for constructing sorting.
+     * @param task       The root task entity.
+     * @param sortColumn The column to sort by.
+     * @param ascending  Whether the sorting is ascending.
+     * @return An Order object representing the sorting.
      */
     private Order buildOrder(CriteriaBuilder cb, Root<Task> task, String sortColumn, boolean ascending) {
         if (sortColumn.contains(".")) {
