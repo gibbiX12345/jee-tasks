@@ -1,17 +1,19 @@
 package com.ffhs.jeetasks.service;
 
-import com.ffhs.jeetasks.bean.LoginBean;
 import com.ffhs.jeetasks.bean.TaskBean;
-import com.ffhs.jeetasks.entity.Status;
-import com.ffhs.jeetasks.entity.Task;
+import com.ffhs.jeetasks.dto.TaskFormDTO;
+import com.ffhs.jeetasks.entity.*;
 import jakarta.ejb.Stateless;
-import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 
 import java.io.Serializable;
-import java.util.List;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Stateless
 public class TaskService implements Serializable {
@@ -19,57 +21,175 @@ public class TaskService implements Serializable {
     @PersistenceContext(unitName = "jee-tasks-pu")
     private EntityManager entityManager;
 
-    @Inject
-    private LoginBean loginBean;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
+    /**
+     * Find a task by its ID.
+     */
     public Task findTaskById(Long taskId) {
-        return entityManager.createQuery("SELECT t FROM Task t WHERE t.taskId = :taskId", Task.class)
-                .setParameter("taskId", taskId)
-                .getSingleResult();
+        return entityManager.find(Task.class, taskId);
     }
 
-    public List<Task> findAllTasksByListId(Long listId, String sortColumn, boolean ascending, TaskBean.TECHNICAL_LIST_TYPE type) {
+    /**
+     * Find all tasks filtered by list ID, sorted, and filtered by user context.
+     */
+    public List<Task> findAllTasksByListId(Long listId, String sortColumn, boolean ascending, TaskBean.TECHNICAL_LIST_TYPE type, Long userId) {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Task> query = cb.createQuery(Task.class);
         Root<Task> task = query.from(Task.class);
 
-        Predicate listIdPredicate = cb.equal(task.get("taskList").get("listId"), listId);
-        Predicate userIdPredicate = cb.equal(task.get("taskList").get("user").get("userId"), loginBean.getUser().getUserId());
-        Predicate assignedUserIdPredicate = cb.equal(task.get("assignedUser").get("userId"), loginBean.getUser().getUserId());
-        switch (type) {
-            case CUSTOM_LIST:
-                query.where(listIdPredicate);
-                break;
-            case ALL_TASKS:
-                query.where(cb.or(userIdPredicate, assignedUserIdPredicate));
-                break;
-            case MY_ASSIGNED_TASKS:
-                query.where(assignedUserIdPredicate);
-                break;
-        }
-        Order order;
-        if (sortColumn.contains(".")) {
-            String object = sortColumn.substring(0, sortColumn.indexOf("."));
-            String property = sortColumn.substring(sortColumn.indexOf(".") + 1);
-            Join<Task, Object> objectJoin = task.join(object, JoinType.LEFT);
-            order = ascending ? cb.asc(objectJoin.get(property)) : cb.desc(objectJoin.get(property));
-        } else {
-            order = ascending ? cb.asc(task.get(sortColumn)) : cb.desc(task.get(sortColumn));
-        }
-        query.orderBy(order);
+        Predicate filters = buildFilters(cb, task, listId, userId, type);
+        Order order = buildOrder(cb, task, sortColumn, ascending);
 
+        query.where(filters).orderBy(order);
         return entityManager.createQuery(query).getResultList();
     }
 
+    /**
+     * Insert a new task into the database.
+     */
     public void insertModel(Task task) {
         entityManager.persist(task);
     }
 
+    /**
+     * Update an existing task in the database.
+     */
     public void updateModel(Task task) {
         entityManager.merge(task);
     }
 
+    /**
+     * Delete a task from the database.
+     */
     public void deleteModel(Task task) {
         entityManager.remove(entityManager.merge(task));
+    }
+
+    /**
+     * Group tasks by their status.
+     */
+    public Map<Status, List<Task>> groupTasksByStatus(List<Task> tasks) {
+        return tasks.stream()
+                .collect(Collectors.groupingBy(
+                        Task::getStatus,
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ));
+    }
+
+    /**
+     * Group tasks with a default status for tasks without a status.
+     */
+    public Map<Status, List<Task>> groupTasksWithDefaultStatus(List<Task> tasks, Status defaultStatus) {
+        return tasks.stream()
+                .collect(Collectors.groupingBy(
+                        task -> task.getStatus() != null ? task.getStatus() : defaultStatus,
+                        LinkedHashMap::new,
+                        Collectors.toList()
+                ));
+    }
+
+    /**
+     * Get a default status instance for grouping.
+     */
+    public Status getDefaultStatus() {
+        Status defaultStatus = new Status();
+        defaultStatus.setValue("No Status");
+        defaultStatus.setOrder(Integer.MAX_VALUE);
+        return defaultStatus;
+    }
+
+    /**
+     * Convert a Task entity to a TaskFormDTO.
+     */
+    public TaskFormDTO toFormDTO(Task task) {
+        TaskFormDTO dto = new TaskFormDTO();
+        dto.setTitle(task.getTitle());
+        dto.setDescription(task.getDescription());
+        dto.setDueDateString(task.getDueDate() != null ? task.getDueDate().toLocalDateTime().format(FORMATTER) : null);
+        dto.setAssignedUserId(task.getAssignedUser() != null ? task.getAssignedUser().getUserId() : null);
+        dto.setPriorityId(task.getPriority() != null ? task.getPriority().getPriorityId() : null);
+        dto.setStatusId(task.getStatus() != null ? task.getStatus().getStatusId() : null);
+        return dto;
+    }
+
+    /**
+     * Update an existing Task entity with data from a TaskFormDTO.
+     */
+    public void updateTaskFromDTO(Task task, TaskFormDTO dto) {
+        task.setTitle(dto.getTitle());
+        task.setDescription(dto.getDescription());
+
+        // Parse and set due date
+        if (dto.getDueDateString() != null && !dto.getDueDateString().isEmpty()) {
+            LocalDateTime dueDate = LocalDateTime.parse(dto.getDueDateString(), FORMATTER);
+            task.setDueDate(Timestamp.valueOf(dueDate));
+        } else {
+            task.setDueDate(null);
+        }
+
+        // Set assigned user
+        if (dto.getAssignedUserId() != null) {
+            User assignedUser = entityManager.find(User.class, dto.getAssignedUserId());
+            task.setAssignedUser(assignedUser);
+        } else {
+            task.setAssignedUser(null);
+        }
+
+        // Set priority
+        if (dto.getPriorityId() != null) {
+            Priority priority = entityManager.find(Priority.class, dto.getPriorityId());
+            task.setPriority(priority);
+        } else {
+            task.setPriority(null);
+        }
+
+        // Set status
+        if (dto.getStatusId() != null) {
+            Status status = entityManager.find(Status.class, dto.getStatusId());
+            task.setStatus(status);
+        } else {
+            task.setStatus(null);
+        }
+
+        // Set created timestamp if creating a new task
+        if (task.getCreatedAt() == null) {
+            task.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        }
+    }
+
+    /**
+     * Build filters for query based on list ID, user ID, and list type.
+     */
+    private Predicate buildFilters(CriteriaBuilder cb, Root<Task> task, Long listId, Long userId, TaskBean.TECHNICAL_LIST_TYPE type) {
+        Predicate listIdPredicate = listId != null ? cb.equal(task.get("taskList").get("listId"), listId) : cb.conjunction();
+        Predicate userIdPredicate = cb.equal(task.get("taskList").get("user").get("userId"), userId);
+        Predicate assignedUserIdPredicate = cb.equal(task.get("assignedUser").get("userId"), userId);
+
+        switch (type) {
+            case CUSTOM_LIST:
+                return listIdPredicate;
+            case ALL_TASKS:
+                return cb.or(userIdPredicate, assignedUserIdPredicate);
+            case MY_ASSIGNED_TASKS:
+                return assignedUserIdPredicate;
+            default:
+                return cb.conjunction();
+        }
+    }
+
+    /**
+     * Build sorting for query based on the column and order direction.
+     */
+    private Order buildOrder(CriteriaBuilder cb, Root<Task> task, String sortColumn, boolean ascending) {
+        if (sortColumn.contains(".")) {
+            String object = sortColumn.substring(0, sortColumn.indexOf("."));
+            String property = sortColumn.substring(sortColumn.indexOf(".") + 1);
+            Join<Task, Object> objectJoin = task.join(object, JoinType.LEFT);
+            return ascending ? cb.asc(objectJoin.get(property)) : cb.desc(objectJoin.get(property));
+        } else {
+            return ascending ? cb.asc(task.get(sortColumn)) : cb.desc(task.get(sortColumn));
+        }
     }
 }

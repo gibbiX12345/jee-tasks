@@ -16,19 +16,19 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="taskEditMaskName" class="form-label">Title</label>
-                        <h:inputText id="taskEditMaskName" value="#{taskBean.taskTitle}"
+                        <h:inputText id="taskEditMaskName" value="#{taskBean.taskForm.title}"
                                      class="form-control" required="true">
                             <c:passThroughAttribute name="required" value="true"/>
                         </h:inputText>
                     </div>
                     <div class="mb-3">
                         <label for="taskEditMaskDescription" class="form-label">Description</label>
-                        <h:inputText id="taskEditMaskDescription" value="#{taskBean.taskDescription}"
+                        <h:inputText id="taskEditMaskDescription" value="#{taskBean.taskForm.description}"
                                      class="form-control" required="false"/>
                     </div>
                     <div class="mb-3">
                         <label for="taskEditMaskAssignee" class="form-label">Assignee</label>
-                        <h:selectOneMenu id="taskEditMaskAssignee" value="#{taskBean.taskAssigendUserId}"
+                        <h:selectOneMenu id="taskEditMaskAssignee" value="#{taskBean.taskForm.assignedUserId}"
                                          class="form-control">
                             <f:selectItems value="#{userBean.users}" var="user"
                                            itemValue="#{user.userId}" itemLabel="#{user.email}"/>
@@ -36,12 +36,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="taskEditMaskDueDate" class="form-label">Due Date</label>
-                        <h:inputText id="taskEditMaskDueDate" value="#{taskBean.taskDueDateString}"
+                        <h:inputText id="taskEditMaskDueDate" value="#{taskBean.taskForm.dueDateString}"
                                      class="form-control" required="false" type="datetime-local"/>
                     </div>
                     <div class="mb-3">
                         <label for="taskEditMaskPriority" class="form-label">Priority</label>
-                        <h:selectOneMenu id="taskEditMaskPriority" value="#{taskBean.taskPriorityId}"
+                        <h:selectOneMenu id="taskEditMaskPriority" value="#{taskBean.taskForm.priorityId}"
                                          class="form-control">
                             <f:selectItems value="#{priorityBean.priorities}" var="priority"
                                            itemValue="#{priority.priorityId}" itemLabel="#{priority.level}"/>
@@ -49,7 +49,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="taskEditMaskStatus" class="form-label">Status</label>
-                        <h:selectOneMenu id="taskEditMaskStatus" value="#{taskBean.taskStatusId}"
+                        <h:selectOneMenu id="taskEditMaskStatus" value="#{taskBean.taskForm.statusId}"
                                          class="form-control">
                             <f:selectItems value="#{statusBean.statuses}" var="status" itemValue="#{status.statusId}"
                                            itemLabel="#{status.value}"/>
