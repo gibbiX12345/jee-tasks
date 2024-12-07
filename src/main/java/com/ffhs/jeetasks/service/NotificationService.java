@@ -39,11 +39,17 @@ public class NotificationService implements Serializable {
     /**
      * Creates and persists a new notification for a specified recipient.
      *
-     * @param text The notification text to display.
+     * @param text      The notification text to display.
      * @param recipient The user who will receive the notification.
-     * @param link An optional link associated with the notification.
+     * @param link      An optional link associated with the notification.
      */
     public void createNotification(String text, User recipient, String link) {
+        if (text == null || text.isEmpty()) {
+            throw new IllegalArgumentException("Notification text cannot be null or empty.");
+        }
+        if (recipient == null) {
+            throw new IllegalArgumentException("Recipient cannot be null.");
+        }
         Notification notification = new Notification();
         notification.setText(text);
         notification.setUser(recipient);
