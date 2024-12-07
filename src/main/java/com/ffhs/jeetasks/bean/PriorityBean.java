@@ -8,6 +8,9 @@ import jakarta.inject.Named;
 
 import java.util.List;
 
+/**
+ * Bean responsible for managing priority-related operations in the application.
+ */
 @Named
 @RequestScoped
 public class PriorityBean {
@@ -15,6 +18,11 @@ public class PriorityBean {
     @Inject
     private PriorityService priorityService;
 
+    /**
+     * Retrieves all priorities available in the system.
+     *
+     * @return A list of all {@link Priority} entities.
+     */
     public List<Priority> getPriorities() {
         return priorityService.findAllPriorities();
     }

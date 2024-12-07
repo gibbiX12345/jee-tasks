@@ -8,6 +8,9 @@ import jakarta.inject.Named;
 
 import java.util.List;
 
+/**
+ * Bean responsible for managing status-related operations in the application.
+ */
 @Named
 @RequestScoped
 public class StatusBean {
@@ -15,6 +18,11 @@ public class StatusBean {
     @Inject
     private StatusService statusService;
 
+    /**
+     * Retrieves all statuses available in the system.
+     *
+     * @return A list of all {@link Status} entities.
+     */
     public List<Status> getStatuses() {
         return statusService.findAllStatuses();
     }
