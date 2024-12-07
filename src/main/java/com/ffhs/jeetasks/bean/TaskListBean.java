@@ -3,8 +3,11 @@ package com.ffhs.jeetasks.bean;
 import com.ffhs.jeetasks.entity.TaskList;
 import com.ffhs.jeetasks.service.TaskListService;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -50,13 +53,26 @@ public class TaskListBean implements Serializable {
         taskListDescription = "";
     }
 
-    public void saveTaskList() {
+    public String saveTaskList() {
+        if (!isValid()) {
+            return null;
+        }
         if (taskListEdit == null) {
             addTaskList();
-            return;
+            return null;
         }
         setTaskListData(taskListEdit);
         taskListService.updateModel(taskListEdit);
+        return null;
+    }
+
+    private boolean isValid() {
+        boolean isValid = true;
+        if (taskListTitle == null || taskListTitle.isEmpty()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Save unsuccessful", "List Name can't be empty"));
+            isValid = false;
+        }
+        return isValid;
     }
 
     private void setTaskListData(TaskList taskList) {

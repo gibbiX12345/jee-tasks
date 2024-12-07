@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="jakarta.faces.core">
 <div class="modal fade" id="taskEditMaskModal" tabindex="-1" aria-labelledby="taskEditMaskModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
@@ -15,7 +17,9 @@
                     <div class="mb-3">
                         <label for="taskEditMaskName" class="form-label">Title</label>
                         <h:inputText id="taskEditMaskName" value="#{taskBean.taskTitle}"
-                                     class="form-control" required="true"/>
+                                     class="form-control" required="true">
+                            <c:passThroughAttribute name="required" value="true"/>
+                        </h:inputText>
                     </div>
                     <div class="mb-3">
                         <label for="taskEditMaskDescription" class="form-label">Description</label>

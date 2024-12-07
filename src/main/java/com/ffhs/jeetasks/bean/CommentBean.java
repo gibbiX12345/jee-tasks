@@ -4,8 +4,11 @@ import com.ffhs.jeetasks.entity.Comment;
 import com.ffhs.jeetasks.entity.Task;
 import com.ffhs.jeetasks.service.CommentService;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.application.FacesMessage;
+import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 import java.io.Serializable;

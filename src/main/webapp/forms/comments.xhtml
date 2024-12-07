@@ -30,12 +30,14 @@
 
                     <div class="input-group">
                         <h:inputText id="newCommentContent" value="#{commentBean.newCommentContent}"
-                                     class="form-control"
-                                     placeholder="Write a comment..." required="true"/>
+                                     class="form-control" required="true" requiredMessage="Comment can't be empty">
+                            <c:passThroughAttribute name="placeholder" value="Write a comment..."/>
+                        </h:inputText>
                         <h:commandButton value="Submit" action="#{commentBean.addComment}" class="btn btn-primary">
                             <c:ajax execute="@form" render="commentForm" onevent="onCommentSubmitCompleted"/>
                         </h:commandButton>
                     </div>
+                    <h:message for="newCommentContent" style="color: red;" />
                 </h:form>
             </div>
         </div>
