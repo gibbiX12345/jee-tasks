@@ -1,5 +1,6 @@
 package com.ffhs.jeetasks.bean.task;
 
+import com.ffhs.jeetasks.dto.TaskListFormDTO;
 import com.ffhs.jeetasks.entity.TaskList;
 import com.ffhs.jeetasks.service.TaskListService;
 import com.ffhs.jeetasks.util.SessionUtils;
@@ -12,7 +13,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -30,12 +30,7 @@ public class TaskListBean implements Serializable {
     private TaskList taskListEdit;
 
     @Getter
-    @Setter
-    private String taskListTitle;
-
-    @Getter
-    @Setter
-    private String taskListDescription;
+    private TaskListFormDTO taskListForm = new TaskListFormDTO();
 
     /**
      * Retrieves all task lists associated with the logged-in user.
@@ -53,24 +48,7 @@ public class TaskListBean implements Serializable {
      */
     public void prepareForEdit(TaskList taskList) {
         taskListEdit = taskList;
-        if (taskList != null) {
-            taskListTitle = taskList.getTitle();
-            taskListDescription = taskList.getDescription();
-        } else {
-            resetForm();
-        }
-    }
-
-    /**
-     * Creates and persists a new task list.
-     */
-    public void addTaskList() {
-        TaskList taskList = new TaskList();
-        populateTaskListData(taskList);
-        taskList.setUser(SessionUtils.getLoggedInUser());
-        taskList.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        taskListService.insertModel(taskList);
-        resetForm();
+        taskListForm = taskList != null ? taskListService.toFormDTO(taskList) : new TaskListFormDTO();
     }
 
     /**
@@ -82,11 +60,14 @@ public class TaskListBean implements Serializable {
         if (!isValid()) {
             return null;
         }
+        TaskList taskList = taskListEdit != null ? taskListEdit : new TaskList();
+
+        taskListService.updateTaskListFromDTO(taskList, taskListForm);
         if (taskListEdit == null) {
-            addTaskList();
+            taskList.setUser(SessionUtils.getLoggedInUser());
+            taskListService.insertModel(taskList);
         } else {
-            populateTaskListData(taskListEdit);
-            taskListService.updateModel(taskListEdit);
+            taskListService.updateModel(taskList);
         }
         return null;
     }
@@ -97,30 +78,11 @@ public class TaskListBean implements Serializable {
      * @return True if valid, false otherwise.
      */
     private boolean isValid() {
-        if (taskListTitle == null || taskListTitle.isEmpty()) {
+        if (taskListForm.getTitle() == null || taskListForm.getTitle().isEmpty()) {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Save unsuccessful", "List Name can't be empty"));
             return false;
         }
         return true;
-    }
-
-    /**
-     * Populates the given task list with data from the form fields.
-     *
-     * @param taskList The task list to populate.
-     */
-    private void populateTaskListData(TaskList taskList) {
-        taskList.setTitle(taskListTitle);
-        taskList.setDescription(taskListDescription);
-    }
-
-    /**
-     * Resets the form fields for creating or editing a task list.
-     */
-    private void resetForm() {
-        taskListEdit = null;
-        taskListTitle = "";
-        taskListDescription = "";
     }
 }

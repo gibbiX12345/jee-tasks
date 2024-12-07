@@ -24,14 +24,14 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="taskListName" class="form-label">List Name</label>
-                        <h:inputText id="taskListName" value="#{taskListBean.taskListTitle}" class="form-control"
+                        <h:inputText id="taskListName" value="#{taskListBean.taskListForm.title}" class="form-control"
                                      required="true" requiredMessage="Comment can't be empty">
                             <c:passThroughAttribute name="required" value="true"/>
                         </h:inputText>
                     </div>
                     <div class="mb-3">
                         <label for="taskListDescription" class="form-label">Description</label>
-                        <h:inputText id="taskListDescription" value="#{taskListBean.taskListDescription}"
+                        <h:inputText id="taskListDescription" value="#{taskListBean.taskListForm.description}"
                                      class="form-control"/>
                     </div>
                     <h:messages globalOnly="true" style="color: red; margin-bottom: 15px;"/>

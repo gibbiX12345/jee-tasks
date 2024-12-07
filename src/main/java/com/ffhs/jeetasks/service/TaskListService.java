@@ -1,5 +1,8 @@
 package com.ffhs.jeetasks.service;
 
+import com.ffhs.jeetasks.dto.TaskFormDTO;
+import com.ffhs.jeetasks.dto.TaskListFormDTO;
+import com.ffhs.jeetasks.entity.Task;
 import com.ffhs.jeetasks.entity.TaskList;
 import com.ffhs.jeetasks.util.SessionUtils;
 import jakarta.ejb.Stateless;
@@ -26,6 +29,18 @@ public class TaskListService implements Serializable {
         return entityManager.createQuery("SELECT l FROM TaskList l WHERE l.user.userId = :userId ORDER BY l.createdAt", TaskList.class)
                 .setParameter("userId", userId)
                 .getResultList();
+    }
+
+    public TaskListFormDTO toFormDTO(TaskList taskList) {
+        TaskListFormDTO dto = new TaskListFormDTO();
+        dto.setTitle(taskList.getTitle());
+        dto.setDescription(taskList.getDescription());
+        return dto;
+    }
+
+    public void updateTaskListFromDTO(TaskList taskList, TaskListFormDTO dto) {
+        taskList.setTitle(dto.getTitle());
+        taskList.setDescription(dto.getDescription());
     }
 
     public void insertModel(TaskList taskList) {
