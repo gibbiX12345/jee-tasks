@@ -29,7 +29,7 @@ public class TaskBean implements Serializable {
     @Inject
     private UserService userService;
     @Inject
-    private PushBean pushBean;
+    private PushBean pushBean; // Corrected injection
     @Inject
     private LoginBean loginBean;
 
@@ -66,7 +66,7 @@ public class TaskBean implements Serializable {
     }
 
     public void prepareForEditByTaskId() {
-        Long taskId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId"));
+        Long taskId = Long.parseLong(getRequestParam("taskId"));
         prepareForEdit(taskService.findTaskById(taskId));
     }
 
@@ -77,35 +77,21 @@ public class TaskBean implements Serializable {
 
     public void saveTask() {
         Task task = taskEdit != null ? taskEdit : new Task();
-        boolean isAssigneeChanged = taskForm.getAssignedUserId() != null &&
-                (taskEdit == null || taskEdit.getAssignedUser() == null ||
-                        !taskForm.getAssignedUserId().equals(taskEdit.getAssignedUser().getUserId()));
-        boolean isNotSelfAssignment = taskForm.getAssignedUserId() != null &&
-                !taskForm.getAssignedUserId().equals(loginBean.getUser().getUserId());
+        boolean isAssigneeChanged = isAssigneeChanged(task);
+        boolean isNotSelfAssignment = isNotSelfAssignment();
 
         taskService.updateTaskFromDTO(task, taskForm);
 
         if (taskEdit == null) {
             task.setTaskList(currentlySelectedList);
             taskService.insertModel(task);
-            if (isAssigneeChanged && isNotSelfAssignment) {
-                String notificationText = "Task '" + task.getTitle() + "' was assigned to you by user " + loginBean.getUser().getEmail();
-                String notificationLink = generateTaskLink(task);
-                notificationService.createNotification(notificationText, userService.findUserById(taskForm.getAssignedUserId()), notificationLink);
-                pushBean.sendPushMessage("notification created");
-            }
+            sendNotificationIfNeeded(task, isAssigneeChanged, isNotSelfAssignment, true);
         } else {
             taskService.updateModel(task);
-            if (isAssigneeChanged && isNotSelfAssignment) {
-                String notificationText = "Task '" + task.getTitle() + "' was reassigned to you by user " + loginBean.getUser().getEmail();
-                String notificationLink = generateTaskLink(task);
-                notificationService.createNotification(notificationText, userService.findUserById(taskForm.getAssignedUserId()), notificationLink);
-                pushBean.sendPushMessage("notification updated");
-            }
+            sendNotificationIfNeeded(task, isAssigneeChanged, isNotSelfAssignment, false);
         }
 
-        taskEdit = null;
-        taskForm = new TaskFormDTO();
+        resetForm();
     }
 
     public void deleteTask() {
@@ -127,16 +113,40 @@ public class TaskBean implements Serializable {
         }
     }
 
-    private Status getDefaultStatus() {
-        return taskService.getDefaultStatus();
+    private boolean isAssigneeChanged(Task task) {
+        return taskForm.getAssignedUserId() != null &&
+                (task == null || task.getAssignedUser() == null ||
+                        !taskForm.getAssignedUserId().equals(task.getAssignedUser().getUserId()));
+    }
+
+    private boolean isNotSelfAssignment() {
+        return taskForm.getAssignedUserId() != null &&
+                !taskForm.getAssignedUserId().equals(loginBean.getUser().getUserId());
+    }
+
+    private void sendNotificationIfNeeded(Task task, boolean isAssigneeChanged, boolean isNotSelfAssignment, boolean isNew) {
+        if (isAssigneeChanged && isNotSelfAssignment) {
+            String notificationText = isNew
+                    ? "Task '" + task.getTitle() + "' was assigned to you by user " + loginBean.getUser().getEmail()
+                    : "Task '" + task.getTitle() + "' was reassigned to you by user " + loginBean.getUser().getEmail();
+            String notificationLink = generateTaskLink(task);
+            notificationService.createNotification(notificationText, userService.findUserById(taskForm.getAssignedUserId()), notificationLink);
+            pushBean.sendPushMessage("notification updated");
+        }
     }
 
     private String generateTaskLink(Task task) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        HttpServletRequest request = (HttpServletRequest) context.getExternalContext().getRequest();
-
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
                 request.getContextPath() + "/index.xhtml?taskId=" + task.getTaskId();
     }
 
+    private String getRequestParam(String param) {
+        return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(param);
+    }
+
+    private void resetForm() {
+        taskEdit = null;
+        taskForm = new TaskFormDTO();
+    }
 }
