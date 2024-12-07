@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:c="http://xmlns.jcp.org/jsf/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
 >
 <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -31,10 +31,10 @@
                     <div class="input-group">
                         <h:inputText id="newCommentContent" value="#{commentBean.newCommentContent}"
                                      class="form-control" required="true" requiredMessage="Comment can't be empty">
-                            <c:passThroughAttribute name="placeholder" value="Write a comment..."/>
+                            <f:passThroughAttribute name="placeholder" value="Write a comment..."/>
                         </h:inputText>
                         <h:commandButton value="Submit" action="#{commentBean.addComment}" class="btn btn-primary">
-                            <c:ajax execute="@form" render="commentForm" onevent="onCommentSubmitCompleted"/>
+                            <f:ajax execute="@form" render="commentForm" onevent="onCommentSubmitCompleted"/>
                         </h:commandButton>
                     </div>
                     <h:message for="newCommentContent" style="color: red;" />
