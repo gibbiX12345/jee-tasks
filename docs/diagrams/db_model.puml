@@ -1,0 +1,65 @@
+@startuml
+entity app_user {
+    * app_user_id : SERIAL
+    * app_user_email : VARCHAR(100)
+    * app_user_password_hash : VARCHAR(200)
+    * app_user_created_at : TIMESTAMP
+}
+
+entity task_list {
+    * task_list_id : SERIAL
+    * task_list_user_id : INT
+    * task_list_title : VARCHAR(100)
+    * task_list_description : TEXT
+    * task_list_created_at : TIMESTAMP
+}
+
+entity status {
+    * status_id : SERIAL
+    * status_value : VARCHAR(50)
+    * status_order : INTEGER
+}
+
+entity priority {
+    * priority_id : SERIAL
+    * priority_level : VARCHAR(50)
+    * priority_order : INTEGER
+}
+
+entity task {
+    * task_id : SERIAL
+    * task_list_id : INT
+    * task_status_id : INT
+    * task_priority_id : INT
+    * task_assigned_user_id : INT
+    * task_title : VARCHAR(100)
+    * task_description : TEXT
+    * task_due_date : TIMESTAMP
+    * task_created_at : TIMESTAMP
+}
+
+entity comment {
+    * comment_id : SERIAL
+    * comment_task_id : INT
+    * comment_user_id : INT
+    * comment_content : TEXT
+    * comment_created_at : TIMESTAMP
+}
+
+entity notification {
+    * notification_id : SERIAL
+    * notification_user_id : INT
+    * notification_text : VARCHAR(1000)
+    * notification_link : VARCHAR(300)
+    * notification_dismissed : BOOLEAN
+    * notification_created_at : TIMESTAMP
+}
+
+app_user ||--o{ task_list : "has"
+task_list ||--o{ task : "contains"
+task ||--|| status : "has"
+task ||--|| priority : "has"
+task ||--o{ comment : "has"
+app_user ||--o{ comment : "creates"
+app_user ||--o{ notification : "receives"
+@enduml

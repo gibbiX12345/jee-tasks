@@ -1,0 +1,56 @@
+@startuml
+
+package "Presentation Layer" {
+  [LoginBean]
+  [RegistrationBean]
+  [TaskBean]
+  [TaskListBean]
+  [CommentBean]
+}
+
+package "Business Logic Layer" {
+  [UserService]
+  [TaskService]
+  [TaskListService]
+  [CommentService]
+  [StatusService]
+  [PriorityService]
+}
+
+package "Data Access Layer" {
+  [User]
+  [Task]
+  [TaskList]
+  [Status]
+  [Priority]
+  [Comment]
+  [PostgreSQL Database]
+}
+
+package "Utility Layer" {
+  [SessionUtils]
+}
+
+[LoginBean] --> [UserService] : uses
+[RegistrationBean] --> [UserService] : uses
+[TaskBean] --> [TaskService] : uses
+[TaskBean] --> [StatusService] : uses
+[TaskBean] --> [PriorityService] : uses
+[TaskListBean] --> [TaskListService] : uses
+[CommentBean] --> [CommentService] : uses
+
+[UserService] --> [User] : accesses
+[TaskService] --> [Task] : accesses
+[TaskListService] --> [TaskList] : accesses
+[StatusService] --> [Status] : accesses
+[PriorityService] --> [Priority] : accesses
+[CommentService] --> [Comment] : accesses
+
+[User] --> [PostgreSQL Database] : read/write
+[Task] --> [PostgreSQL Database] : read/write
+[TaskList] --> [PostgreSQL Database] : read/write
+[Status] --> [PostgreSQL Database] : read
+[Priority] --> [PostgreSQL Database] : read
+[Comment] --> [PostgreSQL Database] : read/write
+
+@enduml

@@ -1,0 +1,13 @@
+@startuml
+actor User
+database PostgreSQL
+rectangle "Task Management App" {
+  [Web Interface]
+  [Task Service]
+  [Notification Service]
+}
+
+User --> [Web Interface]
+[Web Interface] --> [Task Service]
+[Task Service] --> PostgreSQL
+@enduml

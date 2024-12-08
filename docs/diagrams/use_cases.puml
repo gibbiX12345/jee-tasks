@@ -1,0 +1,31 @@
+@startuml
+
+actor User
+
+package "Task Management" {
+  usecase "Registrieren" as UC_Register
+  usecase "Anmelden" as UC_Login
+  usecase "Liste erstellen" as UC_CreateList
+  usecase "Liste modifizieren" as UC_ModifyList
+  usecase "Task erstellen" as UC_CreateTask
+  usecase "Task modifizieren" as UC_ModifyTask
+  usecase "Task zuweisen" as UC_AssignTask
+  usecase "Task Status aktualisieren" as UC_UpdateTaskStatus
+  usecase "Kommentare erfassen" as UC_AddComment
+  usecase "Tasks gruppiert nach Status anzeigen" as UC_ViewTasksByStatus
+}
+
+left to right direction
+
+User --> UC_Register
+User --> UC_Login
+User --> UC_CreateList
+User --> UC_ModifyList
+User --> UC_CreateTask
+User --> UC_ModifyTask
+User --> UC_AssignTask
+User --> UC_UpdateTaskStatus
+User --> UC_AddComment
+User --> UC_ViewTasksByStatus
+
+@enduml

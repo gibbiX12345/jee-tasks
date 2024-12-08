@@ -1,0 +1,20 @@
+@startuml
+actor User
+participant "HTML Registration Form" as Form
+participant "RegistrationBean" as Bean
+participant "UserService" as Service
+participant "EntityManager" as DB
+
+User -> Form: Enters Email and Password
+Form -> Bean: Calls registerUser()
+Bean -> Bean: Validates Input
+alt Input Invalid
+  Bean --> Form: Displays Validation Errors
+else Input Valid
+  Bean -> Service: Calls registerUser(User)
+  Service -> DB: Persists User Entity
+  DB --> Service: Acknowledgment
+  Service --> Bean: Confirmation
+  Bean --> Form: Redirects to Login Page
+end
+@enduml

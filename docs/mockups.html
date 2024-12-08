@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mockups</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 20%;
+        }
+        .container-wide {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 80%;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group textarea {
+            width: 100%;
+            height: 80px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-actions {
+            text-align: center;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        .form-actions button:hover {
+            background-color: #0056b3;
+        }
+        .list-container {
+            display: flex;
+        }
+        .list {
+            width: 150px;
+            margin-right: 20px;
+        }
+        .list ul {
+            list-style: none;
+            padding: 0;
+        }
+        .list ul li {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        .list ul li:hover {
+            background-color: #f0f0f0;
+        }
+        .task-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .task-table th, .task-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        .task-table th {
+            background-color: #f0f0f0;
+        }
+        .task-table td button {
+            padding: 5px 10px;
+            margin: 0;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        .task-table td button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Login</h2>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="Enter your email">
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" placeholder="Enter your password">
+    </div>
+    <div class="form-actions">
+        <button>Login</button>
+    </div>
+    <div class="form-actions">
+        <a href="#">Register</a>
+    </div>
+</div>
+
+<div class="container">
+    <h2>Registration</h2>
+    <div class="form-group">
+        <label for="reg-email">Email:</label>
+        <input type="email" id="reg-email" placeholder="Enter your email">
+    </div>
+    <div class="form-group">
+        <label for="reg-password">Password:</label>
+        <input type="password" id="reg-password" placeholder="Enter your password">
+    </div>
+    <div class="form-actions">
+        <button>Register</button>
+    </div>
+    <div class="form-actions">
+        <a href="#">Already have an account? Login</a>
+    </div>
+</div>
+
+<div class="container-wide">
+    <h2>Task List</h2>
+    <div class="list-container">
+        <div class="list">
+            <h3>Lists</h3>
+            <ul>
+                <li>Work</li>
+                <li>Personal</li>
+                <li>Shopping</li>
+            </ul>
+            <button>New List</button>
+        </div>
+        <div>
+            <h3>Tasks</h3>
+            <button>Edit List</button>
+            <table class="task-table">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th>Due Date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Task 1</td>
+                    <td>Complete project report</td>
+                    <td>New</td>
+                    <td>High</td>
+                    <td>2024-12-10</td>
+                    <td>
+                        <button>Edit</button>
+                        <button>Comments</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Task 2</td>
+                    <td>Prepare presentation</td>
+                    <td>In Progress</td>
+                    <td>Medium</td>
+                    <td>2024-12-15</td>
+                    <td>
+                        <button>Edit</button>
+                        <button>Comments</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Task 3</td>
+                    <td>Review budget plan</td>
+                    <td>Completed</td>
+                    <td>Low</td>
+                    <td>2024-12-20</td>
+                    <td>
+                        <button>Edit</button>
+                        <button>Comments</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <button>New Task</button>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h2>Edit Task List</h2>
+    <div class="form-group">
+        <label for="list-title">Title:</label>
+        <input type="text" id="list-title" placeholder="Enter list title">
+    </div>
+    <div class="form-group">
+        <label for="list-desc">Description:</label>
+        <textarea id="list-desc" placeholder="Enter list description"></textarea>
+    </div>
+    <div class="form-actions">
+        <button>Save</button>
+        <button>Cancel</button>
+    </div>
+</div>
+
+<div class="container">
+    <h2>Edit Task</h2>
+    <div class="form-group">
+        <label for="task-title">Title:</label>
+        <input type="text" id="task-title" placeholder="Enter task title">
+    </div>
+    <div class="form-group">
+        <label for="task-desc">Description:</label>
+        <textarea id="task-desc" placeholder="Enter task description"></textarea>
+    </div>
+    <div class="form-group">
+        <label for="task-status">Status:</label>
+        <select id="task-status">
+            <option>New</option>
+            <option>In Progress</option>
+            <option>Completed</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="task-priority">Priority:</label>
+        <select id="task-priority">
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+        </select>
+    </div>
+    <div class="form-actions">
+        <button>Save</button>
+        <button>Cancel</button>
+    </div>
+</div>
+</body>
+</html>
