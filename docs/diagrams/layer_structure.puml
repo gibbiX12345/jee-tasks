@@ -1,0 +1,49 @@
+@startuml
+package "Presentation Layer" {
+    class UserBean
+    class TaskBean
+    class NotificationBean
+    class RegistrationBean
+    class TaskListBean
+    class LoginBean
+}
+
+package "Business Logic Layer" {
+    class UserService
+    class TaskService
+    class NotificationService
+    class TaskListService
+}
+
+package "Data Access Layer" {
+    class User
+    class Task
+    class TaskList
+    class Status
+    class Priority
+    class Comment
+    class Notification
+}
+
+package "Utilities" {
+    class SessionUtils
+}
+
+"UserBean" --> "UserService" : uses
+"TaskBean" --> "TaskService" : uses
+"NotificationBean" --> "NotificationService" : uses
+"TaskListBean" --> "TaskListService" : uses
+"LoginBean" --> "UserService" : uses
+"RegistrationBean" --> "UserService" : uses
+
+"TaskService" --> "Task" : manages
+"TaskService" --> "User" : interacts
+"TaskListService" --> "TaskList" : manages
+"UserService" --> "User" : manages
+"Task" --> "Status" : has
+"Task" --> "Priority" : has
+"Task" --> "Comment" : contains
+"TaskList" --> "Task" : contains
+"User" --> "Comment" : creates
+"User" --> "Notification" : receives
+@enduml

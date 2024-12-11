@@ -1,0 +1,61 @@
+@startuml
+package "bean" {
+    class UserBean
+    class TaskBean
+    class NotificationBean
+    class RegistrationBean
+    class TaskListBean
+    class LoginBean
+}
+
+package "dto" {
+    class LoginFormDTO
+    class RegistrationFormDTO
+    class TaskFormDTO
+    class TaskListFormDTO
+}
+
+package "entity" {
+    class User
+    class Task
+    class TaskList
+    class Status
+    class Priority
+    class Comment
+    class Notification
+}
+
+package "service" {
+    class UserService
+    class TaskService
+    class NotificationService
+    class TaskListService
+}
+
+package "util" {
+    class SessionUtils
+}
+
+"UserBean" --> "UserService" : uses
+"TaskBean" --> "TaskService" : uses
+"NotificationBean" --> "NotificationService" : uses
+"TaskListBean" --> "TaskListService" : uses
+"LoginBean" --> "UserService" : uses
+"RegistrationBean" --> "UserService" : uses
+
+"LoginFormDTO" <-- "LoginBean" : uses
+"RegistrationFormDTO" <-- "RegistrationBean" : uses
+"TaskFormDTO" <-- "TaskBean" : uses
+"TaskListFormDTO" <-- "TaskListBean" : uses
+
+"TaskService" --> "Task" : manages
+"TaskService" --> "User" : interacts
+"TaskListService" --> "TaskList" : manages
+"UserService" --> "User" : manages
+"Task" --> "Status" : has
+"Task" --> "Priority" : has
+"Task" --> "Comment" : contains
+"TaskList" --> "Task" : contains
+"User" --> "Comment" : creates
+"User" --> "Notification" : receives
+@enduml

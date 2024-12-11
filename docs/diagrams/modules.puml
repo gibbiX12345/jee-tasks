@@ -1,0 +1,44 @@
+@startuml
+package "Modules Overview" {
+    package "User Management" {
+        class UserBean
+        class UserService
+        class User
+        class LoginBean
+        class RegistrationBean
+    }
+
+    package "Task Management" {
+        class TaskBean
+        class TaskService
+        class Task
+        class TaskList
+        class TaskListBean
+        class TaskListService
+    }
+
+    package "Notification Management" {
+        class NotificationBean
+        class NotificationService
+        class Notification
+    }
+
+    package "Utilities" {
+        class SessionUtils
+    }
+}
+
+"UserBean" --> "UserService" : uses
+"UserService" --> "User" : manages
+"LoginBean" --> "UserService" : uses
+"RegistrationBean" --> "UserService" : uses
+
+"TaskBean" --> "TaskService" : uses
+"TaskService" --> "Task" : manages
+"TaskService" --> "TaskList" : interacts
+"TaskListBean" --> "TaskListService" : uses
+"TaskListService" --> "TaskList" : manages
+
+"NotificationBean" --> "NotificationService" : uses
+"NotificationService" --> "Notification" : manages
+@enduml

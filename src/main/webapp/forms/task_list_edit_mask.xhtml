@@ -24,8 +24,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="taskListName" class="form-label">List Name</label>
-                        <h:inputText id="taskListName" value="#{taskListBean.taskListForm.title}" class="form-control"
-                                     required="true" requiredMessage="Comment can't be empty">
+                        <h:inputText id="taskListName" value="#{taskListBean.taskListForm.title}" class="form-control">
                             <c:passThroughAttribute name="required" value="true"/>
                         </h:inputText>
                     </div>
