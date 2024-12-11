@@ -73,7 +73,7 @@ public class TaskBean implements Serializable {
 
         return groupByStatus
                 ? taskService.groupTasksByStatus(tasks)
-                : taskService.groupTasksWithDefaultStatus(tasks, taskService.getDefaultStatus());
+                : taskService.groupTasksWithEmptyStatus(tasks, taskService.getDefaultStatus());
     }
 
     /**

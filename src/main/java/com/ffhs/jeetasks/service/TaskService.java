@@ -101,16 +101,16 @@ public class TaskService implements Serializable {
     }
 
     /**
-     * Group tasks with a default status for tasks without a status.
+     * Group tasks with a default status (no grouping).
      *
      * @param tasks         The list of tasks to group.
-     * @param defaultStatus The default status to assign to tasks without a status.
-     * @return A map grouping tasks by their status or the default status.
+     * @param defaultStatus The default status to assign to the task map.
+     * @return A map with all tasks grouped by a default status.
      */
-    public Map<Status, List<Task>> groupTasksWithDefaultStatus(List<Task> tasks, Status defaultStatus) {
+    public Map<Status, List<Task>> groupTasksWithEmptyStatus(List<Task> tasks, Status defaultStatus) {
         return tasks.stream()
                 .collect(Collectors.groupingBy(
-                        task -> task.getStatus() != null ? task.getStatus() : defaultStatus,
+                        task -> defaultStatus,
                         LinkedHashMap::new,
                         Collectors.toList()
                 ));
