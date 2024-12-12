@@ -3,8 +3,8 @@ DROP TABLE "task";
 DROP TABLE "priority";
 DROP TABLE "status";
 DROP TABLE "task_list";
-DROP TABLE "app_user";
 DROP TABLE "notification";
+DROP TABLE "app_user";
 
 
 CREATE TABLE "app_user"
